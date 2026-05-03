@@ -166,17 +166,21 @@ function isEmbeddedHarnessProvider(provider: string): boolean {
 export function resolveReportedModelRef(params: {
   provider: string;
   model: string;
-  assistant?: { provider?: string; model?: string } | null;
+  assistant?: { provider?: string; model?: string; responseModel?: string } | null;
 }): {
   provider: string;
   model: string;
 } {
   const assistantProvider = params.assistant?.provider?.trim();
+  // Prefer the raw upstream response model (e.g. "kimi-for-coding" returned by
+  // a custom router under request model "default_combo") over the request id.
+  const assistantResponseModel = params.assistant?.responseModel?.trim();
   const assistantModel = params.assistant?.model?.trim();
+  const resolvedAssistantModel = assistantResponseModel || assistantModel;
   if (!assistantProvider) {
     return {
       provider: params.provider,
-      model: assistantModel || params.model,
+      model: resolvedAssistantModel || params.model,
     };
   }
   if (isEmbeddedHarnessProvider(assistantProvider)) {
@@ -187,7 +191,7 @@ export function resolveReportedModelRef(params: {
   }
   return {
     provider: assistantProvider,
-    model: assistantModel || params.model,
+    model: resolvedAssistantModel || params.model,
   };
 }
 
