@@ -20,6 +20,7 @@ git checkout main && git reset --hard origin/main
 # Rebase каждую feat/* и chore/* ветку
 for b in \
   feat/usage-footer-model \
+  feat/usage-footer-response-model \
   feat/usage-limits-custom-providers \
   feat/telegram-raw-tool \
   feat/telegram-healthcheck \
@@ -35,6 +36,7 @@ done
 # Пересобрать integration
 git checkout itolstov/integration && git reset --hard main
 git merge --no-ff feat/usage-footer-model
+git merge --no-ff feat/usage-footer-response-model
 git merge --no-ff feat/usage-limits-custom-providers
 git merge --no-ff feat/telegram-raw-tool
 git merge --no-ff feat/telegram-healthcheck
@@ -76,6 +78,11 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 - `src/auto-reply/reply/agent-runner.misc.runreplyagent.test.ts` — 2 теста: «shows model in footer», «strips provider prefix».
 
 **Format:** `Usage: I in / O out · cache X cached / Y new · model M · est $X` (cache/cost опциональны).
+
+**Связанный fix `feat/usage-footer-response-model`:** упустил при первом порте — footer показывал `model.id` (запрошенная модель, например `default_combo`), а не реальную модель из ответа провайдера (`kimi-for-coding` от custom-роутера).
+
+- `src/agents/pi-embedded-runner/run/helpers.ts` — `resolveReportedModelRef` принимает `assistant.responseModel?` и предпочитает его перед `assistant.model`. pi-ai 0.71.1 в `AssistantMessage.responseModel` уже сохраняет реальную upstream-модель ответа (отдельно от `model` = запрос).
+- `helpers.test.ts` — 5 тестов покрывают: prefers responseModel / falls back to assistant.model / falls back to request / no provider but responseModel / embedded harness ignores responseModel.
 
 ---
 
