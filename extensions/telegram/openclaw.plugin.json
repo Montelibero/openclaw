@@ -7,6 +7,9 @@
   "channelEnvVars": {
     "telegram": ["TELEGRAM_BOT_TOKEN"]
   },
+  "contracts": {
+    "tools": ["telegram_raw"]
+  },
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

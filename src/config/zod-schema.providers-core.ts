@@ -318,6 +318,7 @@ export const TelegramAccountSchemaBase = z
       })
       .strict()
       .optional(),
+    allowRawApi: z.boolean().optional(),
     threadBindings: z
       .object({
         enabled: z.boolean().optional(),
