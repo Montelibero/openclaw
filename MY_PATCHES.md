@@ -66,9 +66,45 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 
 ---
 
+## feat/telegram-raw-tool — `telegram_raw` agent tool
+
+**Status:** in-prod
+**Source:** clawdbot `043597e28` (только `telegram_raw` часть, без `editMessage`)
+**Why:** дать агенту прямой доступ к произвольным Telegram Bot API методам (`getChat`, `setMyCommands`, `getStickerSet` и т.п.) без отдельного action на каждый. Off-by-default; на каждый вызов требуется явный `acknowledgeRisk=true`.
+
+**Changes:**
+
+- `src/config/types.telegram.ts` — `TelegramAccountConfig.allowRawApi?: boolean`.
+- `src/config/zod-schema.providers-core.ts` — `allowRawApi: z.boolean().optional()` в `TelegramAccountSchemaBase`.
+- `extensions/telegram/openclaw.plugin.json` — `contracts.tools: ["telegram_raw"]`.
+- `extensions/telegram/index.ts` — `registerFull(api) { api.registerTool(createTelegramRawTool(api)); }`.
+- `extensions/telegram/src/raw-tool.ts` — **NEW**, `createTelegramRawTool(api)` с typebox-схемой `{action: "callApi", accountId?, acknowledgeRisk, apiMethod, args?, params?}`. Защита: regex + denylist для apiMethod (anti prototype-pollution), `acknowledgeRisk=true` обязателен, `account.config.allowRawApi=true` обязателен. `safeJson` обрабатывает bigints + circular refs.
+- `extensions/telegram/src/raw-tool.test.ts` — **NEW**, 5 тестов.
+
+**Использование:**
+
+```jsonc
+// config
+{ "channels": { "telegram": { "allowRawApi": true } } }
+
+// agent tool call
+{
+  "tool": "telegram_raw",
+  "params": {
+    "action": "callApi",
+    "acknowledgeRisk": true,
+    "apiMethod": "setMyCommands",
+    "args": [[{"command": "start", "description": "Start"}]]
+  }
+}
+```
+
+**Tests:** `pnpm test extensions/telegram/src/raw-tool.test.ts` — 5/5 ✓. tsgo:core+extensions+test:src+test:extensions ✓. check:import-cycles + madge ✓.
+
+---
+
 ## Backlog (планируется)
 
-- `feat/telegram-raw-tool` — прямой Bot API tool для агента. Источник clawdbot `043597e28` (только `telegram_raw` часть).
 - `feat/telegram-healthcheck` — pending updates monitor + stale watchdog + getMe probe. Источник clawdbot `168f63434`, `94d075b59`, `2441cb579`, `69e9d6211`.
 - `feat/extension-telegram-user` — порт extension `telegram-user` (MTProto user-account) по образцу `extensions/zalouser/`. Источник clawdbot `extensions/telegram-user/` (~1360 LOC).
 - `chore/docker-startup-log` — startup-log SHA в stderr (опционально, если banner не устраивает). Источник clawdbot `81ba57102`.
