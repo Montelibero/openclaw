@@ -16,13 +16,47 @@ Rebuild flow on upstream update:
 ```bash
 git fetch origin
 git checkout main && git reset --hard origin/main
-for b in feat/usage-footer-model feat/usage-limits-custom-providers chore/my-patches; do
+
+# Rebase каждую feat/* и chore/* ветку
+for b in \
+  feat/usage-footer-model \
+  feat/usage-limits-custom-providers \
+  feat/telegram-raw-tool \
+  feat/telegram-healthcheck \
+  feat/extension-telegram-user \
+  feat/disable-cooldowns \
+  feat/usage-default-tokens \
+  chore/my-patches \
+  chore/personal-docker-amd64 \
+; do
   git checkout $b && git rebase main
 done
+
+# Пересобрать integration
 git checkout itolstov/integration && git reset --hard main
 git merge --no-ff feat/usage-footer-model
 git merge --no-ff feat/usage-limits-custom-providers
+git merge --no-ff feat/telegram-raw-tool
+git merge --no-ff feat/telegram-healthcheck
+git merge --no-ff feat/extension-telegram-user
+git merge --no-ff feat/disable-cooldowns
+git merge --no-ff feat/usage-default-tokens
 git merge --no-ff chore/my-patches
+git merge --no-ff chore/personal-docker-amd64
+
+# ВАЖНО: после merge'ов перегенерировать config-схемы
+# (allowRawApi для telegram, disableCooldowns для models[*]).
+# Без этого шага schema validation отвергнёт оба ключа в проде.
+pnpm config:schema:gen
+pnpm config:channels:gen
+pnpm config:docs:gen
+git add src/config/schema.base.generated.ts \
+        src/config/bundled-channel-config-metadata.generated.ts \
+        docs/.generated/config-baseline.sha256
+git commit -m "chore(config): regenerate channel + base schema artifacts"
+
+# Push
+git push --force-with-lease origin <each-rebased-branch> itolstov/integration
 ```
 
 Source archive of older patches (from the previous fork `clawdbot`): see `~/Projects/other/clawdbot/itolstov-contributions.md`.
