@@ -3619,6 +3619,9 @@ export const GENERATED_BASE_CONFIG_SCHEMA: BaseConfigSchemaResponse = {
                     streaming: {
                       type: "boolean",
                     },
+                    disableCooldowns: {
+                      type: "boolean",
+                    },
                   },
                   additionalProperties: false,
                 },

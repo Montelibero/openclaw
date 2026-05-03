@@ -14305,6 +14305,9 @@ export const GENERATED_BUNDLED_CHANNEL_CONFIG_METADATA = [
           },
           additionalProperties: false,
         },
+        allowRawApi: {
+          type: "boolean",
+        },
         threadBindings: {
           type: "object",
           properties: {
@@ -15367,6 +15370,9 @@ export const GENERATED_BUNDLED_CHANNEL_CONFIG_METADATA = [
                 },
                 additionalProperties: false,
               },
+              allowRawApi: {
+                type: "boolean",
+              },
               threadBindings: {
                 type: "object",
                 properties: {
@@ -15670,6 +15676,262 @@ export const GENERATED_BUNDLED_CHANNEL_CONFIG_METADATA = [
         label: "Telegram Thread Spawn Context",
         help: 'Default native subagent context for thread-bound spawns. "fork" starts from the requester transcript; "isolated" starts clean. Default: "fork".',
       },
+    },
+  },
+  {
+    pluginId: "telegram-user",
+    channelId: "telegram-user",
+    label: "Telegram User",
+    description: "Telegram user account via MTProto (GramJS)",
+    schema: {
+      $schema: "http://json-schema.org/draft-07/schema#",
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+        enabled: {
+          type: "boolean",
+        },
+        apiId: {
+          type: "number",
+        },
+        apiHash: {
+          type: "string",
+        },
+        botToken: {
+          type: "string",
+        },
+        sessionFile: {
+          type: "string",
+        },
+        sessionString: {
+          type: "string",
+        },
+        dmPolicy: {
+          type: "string",
+          enum: ["pairing", "allowlist", "open", "disabled"],
+        },
+        allowFrom: {
+          type: "array",
+          items: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "number",
+              },
+            ],
+          },
+        },
+        groupPolicy: {
+          type: "string",
+          enum: ["disabled", "allowlist", "open"],
+        },
+        groupAllowFrom: {
+          type: "array",
+          items: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "number",
+              },
+            ],
+          },
+        },
+        groups: {
+          type: "object",
+          properties: {},
+          additionalProperties: {
+            type: "object",
+            properties: {
+              allowFrom: {
+                type: "array",
+                items: {
+                  anyOf: [
+                    {
+                      type: "string",
+                    },
+                    {
+                      type: "number",
+                    },
+                  ],
+                },
+              },
+              enabled: {
+                type: "boolean",
+              },
+              requireMention: {
+                type: "boolean",
+              },
+              tools: {
+                type: "object",
+                properties: {
+                  allow: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                    },
+                  },
+                  alsoAllow: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                    },
+                  },
+                  deny: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                    },
+                  },
+                },
+                additionalProperties: false,
+              },
+            },
+            additionalProperties: false,
+          },
+        },
+        replyToMode: {
+          type: "string",
+          enum: ["off", "first", "all"],
+        },
+        allowRawApi: {
+          type: "boolean",
+        },
+        accounts: {
+          type: "object",
+          properties: {},
+          additionalProperties: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              enabled: {
+                type: "boolean",
+              },
+              apiId: {
+                type: "number",
+              },
+              apiHash: {
+                type: "string",
+              },
+              botToken: {
+                type: "string",
+              },
+              sessionFile: {
+                type: "string",
+              },
+              sessionString: {
+                type: "string",
+              },
+              dmPolicy: {
+                type: "string",
+                enum: ["pairing", "allowlist", "open", "disabled"],
+              },
+              allowFrom: {
+                type: "array",
+                items: {
+                  anyOf: [
+                    {
+                      type: "string",
+                    },
+                    {
+                      type: "number",
+                    },
+                  ],
+                },
+              },
+              groupPolicy: {
+                type: "string",
+                enum: ["disabled", "allowlist", "open"],
+              },
+              groupAllowFrom: {
+                type: "array",
+                items: {
+                  anyOf: [
+                    {
+                      type: "string",
+                    },
+                    {
+                      type: "number",
+                    },
+                  ],
+                },
+              },
+              groups: {
+                type: "object",
+                properties: {},
+                additionalProperties: {
+                  type: "object",
+                  properties: {
+                    allowFrom: {
+                      type: "array",
+                      items: {
+                        anyOf: [
+                          {
+                            type: "string",
+                          },
+                          {
+                            type: "number",
+                          },
+                        ],
+                      },
+                    },
+                    enabled: {
+                      type: "boolean",
+                    },
+                    requireMention: {
+                      type: "boolean",
+                    },
+                    tools: {
+                      type: "object",
+                      properties: {
+                        allow: {
+                          type: "array",
+                          items: {
+                            type: "string",
+                          },
+                        },
+                        alsoAllow: {
+                          type: "array",
+                          items: {
+                            type: "string",
+                          },
+                        },
+                        deny: {
+                          type: "array",
+                          items: {
+                            type: "string",
+                          },
+                        },
+                      },
+                      additionalProperties: false,
+                    },
+                  },
+                  additionalProperties: false,
+                },
+              },
+              replyToMode: {
+                type: "string",
+                enum: ["off", "first", "all"],
+              },
+              allowRawApi: {
+                type: "boolean",
+              },
+            },
+            additionalProperties: false,
+          },
+        },
+        defaultAccount: {
+          type: "string",
+        },
+      },
+      additionalProperties: false,
     },
   },
   {
