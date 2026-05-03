@@ -60,6 +60,11 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ steps.image.outputs.name }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Layer + mount-cache хранятся в отдельном :buildcache-теге GHCR,
+          # а не в GHA-кэше: так buildkit-mount-cache (pnpm-store) переживает
+          # эфемерные runner'ы и pnpm install не качает деревья заново.
+          cache-from: type=registry,ref=${{ steps.image.outputs.name }}:buildcache
+          cache-to: type=registry,ref=${{ steps.image.outputs.name }}:buildcache,mode=max,image-manifest=true,oci-mediatypes=true
           provenance: false
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
