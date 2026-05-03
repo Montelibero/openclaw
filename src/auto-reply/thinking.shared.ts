@@ -166,7 +166,9 @@ export function normalizeUsageDisplay(raw?: string | null): UsageDisplayLevel | 
 }
 
 export function resolveResponseUsageMode(raw?: string | null): UsageDisplayLevel {
-  return normalizeUsageDisplay(raw) ?? "off";
+  // Default to "tokens" so the bot always shows the Usage footer
+  // (`Usage: I in / O out · model X`) unless explicitly disabled via /usage off.
+  return normalizeUsageDisplay(raw) ?? "tokens";
 }
 
 export function normalizeElevatedLevel(raw?: string | null): ElevatedLevel | undefined {
