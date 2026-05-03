@@ -13,6 +13,7 @@ export const formatResponseUsageLine = (params: {
     cacheRead?: number;
     cacheWrite?: number;
   };
+  model?: string;
   showCost: boolean;
   costConfig?: ModelCostConfig;
 }): string | null => {
@@ -47,7 +48,16 @@ export const formatResponseUsageLine = (params: {
     (typeof cacheWrite === "number" && cacheWrite > 0)
       ? ` · cache ${formatTokenCount(cacheRead ?? 0)} cached / ${formatTokenCount(cacheWrite ?? 0)} new`
       : "";
-  const suffix = costLabel ? ` · est ${costLabel}` : "";
+  const modelLabelRaw = params.model?.trim();
+  const modelLabel = modelLabelRaw
+    ? modelLabelRaw.includes("/")
+      ? modelLabelRaw.slice(modelLabelRaw.lastIndexOf("/") + 1)
+      : modelLabelRaw
+    : undefined;
+  const suffixParts: string[] = [];
+  if (modelLabel) suffixParts.push(`model ${modelLabel}`);
+  if (costLabel) suffixParts.push(`est ${costLabel}`);
+  const suffix = suffixParts.length > 0 ? ` · ${suffixParts.join(" · ")}` : "";
   return `Usage: ${inputLabel} in / ${outputLabel} out${cacheSuffix}${suffix}`;
 };
 

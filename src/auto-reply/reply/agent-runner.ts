@@ -1542,6 +1542,7 @@ export async function runReplyAgent(params: {
         : undefined;
       let formatted = formatResponseUsageLine({
         usage,
+        model: modelUsed,
         showCost,
         costConfig,
       });
