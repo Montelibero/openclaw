@@ -257,6 +257,15 @@ docker pull ghcr.io/montelibero/openclaw:latest
 - Backfill workflow_dispatch с `tag` input — не использую.
 - OCI labels через `org.opencontainers.image.revision` (можно добавить позже).
 
+**Кэширование (после `ci(personal-docker): use registry cache`):**
+
+- `cache-from/cache-to: type=registry,ref=ghcr.io/<owner>/openclaw:buildcache` — отдельный тег для layer + mount cache.
+- Mount cache pnpm-store (`/root/.local/share/pnpm/store`) переживает эфемерные runner'ы → pnpm install не качает деревья заново.
+- `mode=max` каширует ВСЕ слои, не только финальный.
+- `image-manifest=true,oci-mediatypes=true` — нужно для GHCR-совместимого формата.
+- Первая сборка после смены — длинная (12-15 мин, надо засеять кэш). Последующие — 3-7 мин если только код меняется.
+- `:buildcache` тег в GHCR — отдельный package, можно почистить если разрастётся (`gh api -X DELETE /user/packages/container/openclaw%2Fbuildcache/versions/<id>`).
+
 ---
 
 ## feat/disable-cooldowns — `disableCooldowns` per-model config
