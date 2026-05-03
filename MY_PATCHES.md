@@ -125,9 +125,70 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 
 ---
 
+## feat/extension-telegram-user — Telegram user (MTProto) channel plugin
+
+**Status:** in-prod (минимально-рабочий port, без e2e-тестов)
+**Source:** clawdbot `extensions/telegram-user/` (полный плагин, 13 src TS-файлов)
+**Why:** возможность работать как Telegram user-аккаунт (через MTProto / GramJS), не как бот. Чтение чатов с историей (`telegram_user_history`), raw MTProto-вызовы (`telegram_user_raw`), login flow (`telegram_user_login`), приём входящих и пейринг-policy.
+
+**Архитектура:** новый extension `extensions/telegram-user/`, манифест по образцу `extensions/zalouser/`. Manifest `openclaw.plugin.json`, `package.json` с `openclaw.extensions[]` + `openclaw.channel{}`, entry через `defineBundledChannelEntry` с lazy specifier loading через `channel-plugin-api.ts` и `runtime-api.ts` барели.
+
+**Changes (новый extension, ~1240 LOC src + manifest/package):**
+
+- `index.ts` — `defineBundledChannelEntry` с `plugin.specifier=./channel-plugin-api.js` и `runtime.specifier=./runtime-api.js`.
+- `channel-plugin-api.ts`, `runtime-api.ts` — barrels.
+- `openclaw.plugin.json` — `id=telegram-user`, `channels=[telegram-user]`, `channelEnvVars=[TELEGRAM_USER_API_ID,TELEGRAM_USER_API_HASH,TELEGRAM_USER_BOT_TOKEN]`.
+- `package.json` — `@openclaw/telegram-user`, deps `telegram@2.26.22`, `zod^4.3.6`, peer `openclaw>=2026.5.3`.
+- `src/`:
+  - `types.ts`, `config-schema.ts` — TelegramUserAccountConfig + zod schema.
+  - `storage.ts` — sessions в `~/.openclaw/credentials/telegram-user/<accountId>.session`, env override `OPENCLAW_STATE_DIR` / `OPENCLAW_OAUTH_DIR`.
+  - `accounts.ts` — мульти-аккаунт через `cfg.channels["telegram-user"].accounts`, env fallback `TELEGRAM_USER_*`.
+  - `client.ts` — singleton `TelegramClient` per account, bot/user mode.
+  - `send.ts`, `outbound.ts` — outbound text + ChannelOutboundAdapter с `resolveTarget` (включая wildcard и allowFrom-fallback).
+  - `monitor.ts` — `NewMessage` event handler, dmPolicy (pairing/allowlist/open/disabled), groupPolicy, route resolution через `core.channel.{routing,session,reply,pairing}`.
+  - `runtime.ts` — `setTelegramUserRuntime(api.runtime)` / `getTelegramUserRuntime()`.
+  - `channel.ts` — главный ChannelPlugin export: meta, pairing, capabilities, configSchema, config helpers (account list/resolve/setEnabled/delete/isConfigured), security/dmPolicy resolver, messaging.normalizeTarget, outbound, agentTools, gateway.startAccount/stopAccount.
+  - `login-tool.ts` — `telegram_user_login` (sendCode/signIn/status/logout/saveSession), session-file based.
+  - `history-tool.ts` — `telegram_user_history` (получить N сообщений / по ids).
+  - `raw-tool.ts` — `telegram_user_raw` (invoke MTProto Api ctor / callClient method), требует `acknowledgeRisk=true` + `account.config.allowRawApi=true`.
+
+**Адаптации к новой архитектуре openclaw:**
+
+- `clawdbot/plugin-sdk` → `openclaw/plugin-sdk/{core,config-types,channel-feedback,agent-config-primitives}`.
+- `ClawdbotConfig`/`ClawdbotPluginApi` → `OpenClawConfig`/`OpenClawPluginApi`.
+- `ChannelAgentTool` → `AnyAgentTool`.
+- Telegram subpath imports получили `.js` суффиксы (`telegram/sessions/index.js`, `telegram/events/index.js`, `telegram/Utils.js`) — NodeNext требует.
+- `jsonResult` content `type: "text"` → `"text" as const` (strict tool-result schema).
+- `ChatType` уже `"direct" | "group" | "channel"` — убрал `"dm"` маппинг.
+- `upsertPairingRequest` теперь требует `accountId`.
+- `removeEventHandler` теперь требует filter (передаём тот же `NewMessage({})`).
+- Storage `CLAWDBOT_*` env vars → `OPENCLAW_*`, `~/.clawdbot/` → `~/.openclaw/`.
+
+**Что НЕ переносилось:**
+
+- e2e/integration тесты (clawdbot их не имел).
+- bigint chatTarget в history-tool (telegram@2.26.22 типы не поддерживают bigint в `EntityLike` — оставил string-only).
+- Setup/onboarding wizard (`setup-entry.ts`/`setup-plugin-api.ts` как в zalouser) — для базового запуска не нужны; добавлять при необходимости.
+- Doctor/security-audit barrels — не было в clawdbot, для production-пакета добавить.
+
+**Verification:**
+
+- `tsgo:extensions` ✓
+- `tsgo:core` ✓
+- `oxfmt --check` ✓ (после авто-формата)
+- `check:import-cycles` ✓ (0 cycles)
+
+**Чтобы залогиниться:**
+
+1. Получить `apiId`/`apiHash` на https://my.telegram.org → set in config или env `TELEGRAM_USER_API_ID`/`TELEGRAM_USER_API_HASH`.
+2. Через бот вызвать `telegram_user_login` action `sendCode` с `phoneNumber`.
+3. Затем `signIn` с `phoneCode` из SMS.
+4. Сессия сохраняется в `~/.openclaw/credentials/telegram-user/default.session`.
+
+---
+
 ## Backlog (планируется)
 
-- `feat/extension-telegram-user` — порт extension `telegram-user` (MTProto user-account) по образцу `extensions/zalouser/`. Источник clawdbot `extensions/telegram-user/` (~1360 LOC).
 - `chore/docker-startup-log` — startup-log SHA в stderr (опционально, если banner не устраивает). Источник clawdbot `81ba57102`.
 
 См. также: `~/Projects/other/clawdbot/itolstov-contributions.md` (полный план переноса с категориями A/B/C/D).
