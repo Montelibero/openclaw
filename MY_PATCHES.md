@@ -103,9 +103,30 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 
 ---
 
+## feat/telegram-healthcheck — pending update count в probe
+
+**Status:** in-prod (минимальный объём — апстрим перекрыл основное)
+**Source:** clawdbot `168f63434` (только часть про probe; остальное не нужно)
+**Why:** видеть `pendingUpdateCount` в выводе `openclaw channels status` и других места, где используется TelegramProbe — диагностика, очередь не растёт ли.
+
+**Что НЕ переносилось из исходных 4 коммитов и почему:**
+
+- `94d075b59` (stale watchdog в monitor.ts) — апстрим перестроил polling. Есть `extensions/telegram/src/polling-liveness.ts` `TelegramPollingLivenessTracker.detectStall(...)` с per-call API tracking, in-flight detection и rebuild transport через `markTransportDirty()`. Намного богаче моей версии. Не переносим.
+- `2441cb579` (getMe probe before stale-watchdog restart) — апстрим использует другой подход (consecutive timeouts + transport rebuild). getMe-probe тут не нужен. Не переносим.
+- `69e9d6211` (absorb runner.task rejection) — в `polling-session.ts` rejection-обработка уже есть. Не переносим.
+- Healthcheck endpoint в `server-http.ts` (часть `168f63434`) — апстрим имеет `/health` (live) + `/ready` (ready) split-архитектуру с `getReadiness`. Расширять `/health` с telegram-specific проверками не вписывается; внутренний stall recovery в polling-session достаточен (Docker restart не нужен — апстрим сам перезапустит polling). `Dockerfile` уже имеет `HEALTHCHECK`.
+
+**Changes (только полезное):**
+
+- `extensions/telegram/src/probe.ts` — `TelegramProbe.webhook.pendingUpdateCount?: number | null`, парсится из `pending_update_count` в getWebhookInfo.
+- `extensions/telegram/src/probe.test.ts` — тест "captures pending_update_count from getWebhookInfo".
+
+**Tests:** `pnpm test extensions/telegram/src/probe.test.ts` — 12/12 ✓. tsgo:extensions ✓.
+
+---
+
 ## Backlog (планируется)
 
-- `feat/telegram-healthcheck` — pending updates monitor + stale watchdog + getMe probe. Источник clawdbot `168f63434`, `94d075b59`, `2441cb579`, `69e9d6211`.
 - `feat/extension-telegram-user` — порт extension `telegram-user` (MTProto user-account) по образцу `extensions/zalouser/`. Источник clawdbot `extensions/telegram-user/` (~1360 LOC).
 - `chore/docker-startup-log` — startup-log SHA в stderr (опционально, если banner не устраивает). Источник clawdbot `81ba57102`.
 
