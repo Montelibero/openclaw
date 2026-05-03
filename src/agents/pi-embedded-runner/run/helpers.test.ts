@@ -1,6 +1,10 @@
 import type { AssistantMessage } from "@mariozechner/pi-ai";
 import { describe, expect, it } from "vitest";
-import { resolveFinalAssistantRawText, resolveFinalAssistantVisibleText } from "./helpers.js";
+import {
+  resolveFinalAssistantRawText,
+  resolveFinalAssistantVisibleText,
+  resolveReportedModelRef,
+} from "./helpers.js";
 
 function makeAssistantMessage(
   content: AssistantMessage["content"],
@@ -71,5 +75,52 @@ describe("resolveFinalAssistantVisibleText", () => {
     ]);
 
     expect(resolveFinalAssistantRawText(lastAssistant)).toBe("<final>keep this</final>");
+  });
+});
+
+describe("resolveReportedModelRef", () => {
+  it("prefers responseModel over assistant.model when both differ from request", () => {
+    const ref = resolveReportedModelRef({
+      provider: "custom",
+      model: "default_combo",
+      assistant: { provider: "custom", model: "default_combo", responseModel: "kimi-for-coding" },
+    });
+    expect(ref).toEqual({ provider: "custom", model: "kimi-for-coding" });
+  });
+
+  it("falls back to assistant.model when responseModel is missing", () => {
+    const ref = resolveReportedModelRef({
+      provider: "openai",
+      model: "gpt-5.4",
+      assistant: { provider: "openai", model: "gpt-5.4-2026-01" },
+    });
+    expect(ref).toEqual({ provider: "openai", model: "gpt-5.4-2026-01" });
+  });
+
+  it("falls back to request model when both responseModel and assistant.model are absent", () => {
+    const ref = resolveReportedModelRef({
+      provider: "anthropic",
+      model: "claude",
+      assistant: { provider: "anthropic" },
+    });
+    expect(ref).toEqual({ provider: "anthropic", model: "claude" });
+  });
+
+  it("uses request model when assistant has no provider (preserves prior behavior)", () => {
+    const ref = resolveReportedModelRef({
+      provider: "custom",
+      model: "default_combo",
+      assistant: { responseModel: "kimi-for-coding" },
+    });
+    expect(ref).toEqual({ provider: "custom", model: "kimi-for-coding" });
+  });
+
+  it("ignores responseModel for embedded harness provider (stays on request model)", () => {
+    const ref = resolveReportedModelRef({
+      provider: "openai",
+      model: "gpt-5.4",
+      assistant: { provider: "pi", model: "gpt-5.4-2026-01", responseModel: "should-be-ignored" },
+    });
+    expect(ref).toEqual({ provider: "openai", model: "gpt-5.4" });
   });
 });
