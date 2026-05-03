@@ -605,12 +605,50 @@ function keepActiveWindowOrRecompute(params: {
   return hasActiveWindow ? existingUntil : recomputedUntil;
 }
 
+/**
+ * Look up `agents.defaults.models["<provider>/<model>"].disableCooldowns`.
+ * Matches by normalized provider id so e.g. "minimax-portal" still hits a
+ * config entry keyed by "minimax/...".
+ */
+function isModelCooldownDisabled(params: {
+  cfg?: OpenClawConfig;
+  providerId: string;
+  modelId?: string;
+}): boolean {
+  const modelId = params.modelId?.trim();
+  if (!modelId) {
+    return false;
+  }
+  const entries = params.cfg?.agents?.defaults?.models;
+  if (!entries) {
+    return false;
+  }
+  const normalizedProvider = normalizeProviderId(params.providerId);
+  for (const [key, entry] of Object.entries(entries)) {
+    const slashIndex = key.indexOf("/");
+    if (slashIndex <= 0 || slashIndex === key.length - 1) {
+      continue;
+    }
+    const providerPart = key.slice(0, slashIndex);
+    const modelPart = key.slice(slashIndex + 1).trim();
+    if (normalizeProviderId(providerPart) !== normalizedProvider) {
+      continue;
+    }
+    if (modelPart !== modelId) {
+      continue;
+    }
+    return entry?.disableCooldowns === true;
+  }
+  return false;
+}
+
 function computeNextProfileUsageStats(params: {
   existing: ProfileUsageStats;
   now: number;
   reason: AuthProfileFailureReason;
   cfgResolved: ResolvedAuthCooldownConfig;
   modelId?: string;
+  disableCooldowns?: boolean;
 }): ProfileUsageStats {
   const windowMs = params.cfgResolved.failureWindowMs;
   const windowExpired =
@@ -639,6 +677,15 @@ function computeNextProfileUsageStats(params: {
     failureCounts,
     lastFailureAt: params.now,
   };
+
+  if (params.disableCooldowns) {
+    updatedStats.cooldownUntil = undefined;
+    updatedStats.disabledUntil = undefined;
+    updatedStats.disabledReason = undefined;
+    updatedStats.cooldownReason = undefined;
+    updatedStats.cooldownModel = undefined;
+    return updatedStats;
+  }
 
   const disabledFailureReason =
     params.reason === "billing" || params.reason === "auth_permanent" ? params.reason : null;
@@ -771,12 +818,18 @@ export async function markAuthProfileFailure(params: {
 
       previousStats = freshStore.usageStats?.[profileId];
       updateTime = now;
+      const disableCooldowns = isModelCooldownDisabled({
+        cfg,
+        providerId: profile.provider,
+        modelId,
+      });
       const computed = computeNextProfileUsageStats({
         existing: previousStats ?? {},
         now,
         reason,
         cfgResolved,
         modelId,
+        disableCooldowns,
       });
       nextStats = currentWhamResult
         ? applyWhamCooldownResult({
@@ -833,12 +886,18 @@ export async function markAuthProfileFailure(params: {
   });
 
   previousStats = store.usageStats?.[profileId];
+  const disableCooldowns = isModelCooldownDisabled({
+    cfg,
+    providerId: store.profiles[profileId]?.provider ?? "",
+    modelId,
+  });
   const computed = computeNextProfileUsageStats({
     existing: previousStats ?? {},
     now,
     reason,
     cfgResolved,
     modelId,
+    disableCooldowns,
   });
   nextStats = currentWhamResult
     ? applyWhamCooldownResult({

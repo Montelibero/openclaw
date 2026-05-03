@@ -44,6 +44,12 @@ export type AgentModelEntryConfig = {
   agentRuntime?: AgentRuntimePolicyConfig;
   /** Enable streaming for this model (default: true, false for Ollama to avoid SDK issue #1205). */
   streaming?: boolean;
+  /**
+   * When true, never write auth-profile cooldown / billing-disable state for
+   * this model on failure. Useful for "always retry" fallback models such as
+   * a free pool behind a custom router.
+   */
+  disableCooldowns?: boolean;
 };
 
 export type AgentModelListConfig = {

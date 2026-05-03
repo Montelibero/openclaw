@@ -1396,3 +1396,62 @@ describe("markAuthProfileFailure — per-model cooldown metadata", () => {
     expect(stats?.cooldownModel).toBeUndefined();
   });
 });
+
+describe("markAuthProfileFailure — disableCooldowns model override", () => {
+  it("does not write cooldown/disabled windows when model has disableCooldowns=true", async () => {
+    const store = makeStore({});
+    store.profiles["custom:default"] = {
+      type: "api_key",
+      provider: "custom",
+      key: "sk-default",
+    };
+    await markAuthProfileFailure({
+      store,
+      profileId: "custom:default",
+      reason: "billing",
+      modelId: "free_combo",
+      cfg: {
+        agents: {
+          defaults: {
+            models: {
+              "custom/free_combo": { disableCooldowns: true },
+            },
+          },
+        },
+      } as never,
+    });
+    const stats = store.usageStats?.["custom:default"];
+    expect(stats?.disabledUntil).toBeUndefined();
+    expect(stats?.cooldownUntil).toBeUndefined();
+    expect(stats?.disabledReason).toBeUndefined();
+    expect(stats?.errorCount).toBe(1);
+    expect(stats?.failureCounts?.billing).toBe(1);
+  });
+
+  it("still writes cooldown for a sibling model on the same provider", async () => {
+    const store = makeStore({});
+    store.profiles["custom:default"] = {
+      type: "api_key",
+      provider: "custom",
+      key: "sk-default",
+    };
+    await markAuthProfileFailure({
+      store,
+      profileId: "custom:default",
+      reason: "rate_limit",
+      modelId: "paid_combo",
+      cfg: {
+        agents: {
+          defaults: {
+            models: {
+              "custom/free_combo": { disableCooldowns: true },
+            },
+          },
+        },
+      } as never,
+    });
+    const stats = store.usageStats?.["custom:default"];
+    expect(stats?.cooldownUntil).toBeDefined();
+    expect(stats?.cooldownReason).toBe("rate_limit");
+  });
+});
