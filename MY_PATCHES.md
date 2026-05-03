@@ -1,14 +1,29 @@
 # Local stack on top of upstream openclaw
 
-This file tracks personal patches kept on the `itolstov/integration` branch (and its `feat/*` source branches) on top of the openclaw upstream `main`. Each entry is one feature, one branch.
+This file tracks personal patches that ship on the `itolstov/integration` branch (and its `feat/*`/`chore/*` source branches) on top of the openclaw upstream `main`. Each entry is one feature, one branch.
 
 Convention:
 
 - `main` = clean mirror of `origin/main` (upstream openclaw). No personal commits.
 - `feat/*`, `chore/*` = thematic source branches, atomic and rebaseable onto upstream.
-- `itolstov/integration` = merge of all `feat/*` branches; daily-driver.
+- `chore/my-patches` = this file lives here on its own branch so it survives `itolstov/integration` rebuilds.
+- `itolstov/integration` = `main` + merged `feat/*` + merged `chore/my-patches`; daily-driver, source for prod docker builds.
 
-Update this file when a `feat/*` branch lands on `itolstov/integration`. Drop the entry if upstream absorbs the feature.
+Update this file on `chore/my-patches` whenever a feat/chore branch lands on `itolstov/integration` (or gets dropped because upstream absorbed it). Then re-merge `chore/my-patches` into `itolstov/integration`.
+
+Rebuild flow on upstream update:
+
+```bash
+git fetch origin
+git checkout main && git reset --hard origin/main
+for b in feat/usage-footer-model feat/usage-limits-custom-providers chore/my-patches; do
+  git checkout $b && git rebase main
+done
+git checkout itolstov/integration && git reset --hard main
+git merge --no-ff feat/usage-footer-model
+git merge --no-ff feat/usage-limits-custom-providers
+git merge --no-ff chore/my-patches
+```
 
 Source archive of older patches (from the previous fork `clawdbot`): see `~/Projects/other/clawdbot/itolstov-contributions.md`.
 
