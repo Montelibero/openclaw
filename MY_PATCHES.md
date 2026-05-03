@@ -260,6 +260,20 @@ docker pull ghcr.io/montelibero/openclaw:latest
 
 ---
 
+## feat/usage-default-tokens — Usage footer показывается по умолчанию
+
+**Status:** in-prod
+**Source:** clawdbot `e1c70d795` (Usage: default responseUsageMode to tokens)
+**Why:** без этого `responseUsage` дефолт `"off"` → бот молчит про токены и модель в каждом ответе. С `feat/usage-footer-model` Usage-строка готова показывать `model X`, но не показывалась без явного `/usage tokens`. Этот фикс делает дефолт `"tokens"`.
+
+**Changes:**
+
+- `src/auto-reply/thinking.shared.ts` — `resolveResponseUsageMode(raw)` дефолт меняется `"off"` → `"tokens"`. Затрагивает 3 callsite (agent-runner reply, /usage status command, TUI). `/usage off` по-прежнему работает для отключения.
+
+**Tests:** `pnpm test src/auto-reply/thinking.test.ts` — 36/36 ✓. `commands-session-usage.test.ts` 5/5 ✓. usage footer 2/2 ✓. tsgo:core ✓.
+
+---
+
 ## Backlog (планируется)
 
 - `chore/docker-startup-log` — startup-log SHA в stderr (опционально, если banner не устраивает). Источник clawdbot `81ba57102`.
