@@ -1,0 +1,37 @@
+{
+  "name": "@openclaw/telegram-user",
+  "version": "2026.5.3",
+  "private": true,
+  "description": "OpenClaw Telegram user (MTProto) channel plugin",
+  "type": "module",
+  "dependencies": {
+    "telegram": "2.26.22",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "openclaw": "workspace:*"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.5.3"
+  },
+  "peerDependenciesMeta": {
+    "openclaw": {
+      "optional": true
+    }
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "channel": {
+      "id": "telegram-user",
+      "label": "Telegram User",
+      "selectionLabel": "Telegram User (MTProto)",
+      "docsPath": "/channels/telegram",
+      "docsLabel": "telegram",
+      "blurb": "Telegram user account via MTProto (GramJS)",
+      "order": 75,
+      "quickstartAllowFrom": true
+    }
+  }
+}
