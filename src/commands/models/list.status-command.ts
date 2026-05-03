@@ -715,18 +715,32 @@ export async function modelsStatusCommand(
 
   runtime.log("");
   runtime.log(colorize(rich, theme.heading, "OAuth/token status"));
-  if (oauthProfiles.length === 0) {
+
+  const customProvidersWithBaseUrl = new Set<string>();
+  for (const [id, pCfg] of Object.entries(cfg.models?.providers ?? {})) {
+    if (pCfg?.baseUrl) {
+      customProvidersWithBaseUrl.add(id);
+    }
+  }
+
+  const providersInBlock = new Set<string>([
+    ...oauthProfiles.map((p) => p.provider),
+    ...customProvidersWithBaseUrl,
+  ]);
+
+  if (providersInBlock.size === 0) {
     runtime.log(colorize(rich, theme.muted, "- none"));
   } else {
     const { formatUsageWindowSummary, loadProviderUsageSummary, resolveUsageProviderId } =
       await loadProviderUsageRuntime();
     const usageByProvider = new Map<string, string>();
     const usageProviders = Array.from(
-      new Set(
-        oauthProfiles
+      new Set([
+        ...oauthProfiles
           .map((profile) => resolveUsageProviderId(profile.provider))
           .filter((provider): provider is NonNullable<typeof provider> => Boolean(provider)),
-      ),
+        ...customProvidersWithBaseUrl,
+      ]),
     );
     if (usageProviders.length > 0) {
       try {
@@ -776,9 +790,16 @@ export async function modelsStatusCommand(
       }
     }
 
-    for (const [provider, profiles] of profilesByProvider) {
-      const usageKey = resolveUsageProviderId(provider);
-      const usage = usageKey ? usageByProvider.get(usageKey) : undefined;
+    const sortedProviders = Array.from(providersInBlock).sort();
+    for (const provider of sortedProviders) {
+      const profiles = profilesByProvider.get(provider) ?? [];
+      const usageKey = resolveUsageProviderId(provider) ?? provider;
+      const usage = usageByProvider.get(usageKey);
+      // Skip providers with no profiles and no usage data so the block stays
+      // tidy when a custom provider's `/v1/limits` is unsupported.
+      if (profiles.length === 0 && !usage) {
+        continue;
+      }
       const usageSuffix = usage ? colorize(rich, theme.muted, ` usage: ${usage}`) : "";
       runtime.log(`- ${colorize(rich, theme.heading, provider)}${usageSuffix}`);
       for (const profile of profiles) {

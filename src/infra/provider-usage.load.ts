@@ -2,10 +2,11 @@ import { getRuntimeConfig, type OpenClawConfig } from "../config/config.js";
 import { resolveProviderUsageSnapshotWithPlugin } from "../plugins/provider-runtime.js";
 import { resolveFetch } from "./fetch.js";
 import { type ProviderAuth, resolveProviderAuths } from "./provider-usage.auth.js";
+import { fetchCustomUsage } from "./provider-usage.fetch.custom.js";
 import {
   DEFAULT_TIMEOUT_MS,
+  getProviderLabel,
   ignoredErrors,
-  PROVIDER_LABELS,
   usageProviders,
   withTimeout,
 } from "./provider-usage.shared.js";
@@ -20,11 +21,18 @@ async function fetchProviderUsageSnapshotFallback(params: {
   timeoutMs: number;
   fetchFn: typeof fetch;
 }): Promise<ProviderUsageSnapshot> {
-  void params.timeoutMs;
-  void params.fetchFn;
+  if (params.auth.baseUrl) {
+    return fetchCustomUsage(
+      params.auth.provider,
+      params.auth.baseUrl,
+      params.auth.token,
+      params.timeoutMs,
+      params.fetchFn,
+    );
+  }
   return {
     provider: params.auth.provider,
-    displayName: PROVIDER_LABELS[params.auth.provider] ?? params.auth.provider,
+    displayName: getProviderLabel(params.auth.provider),
     windows: [],
     error: "Unsupported provider",
   };
@@ -117,7 +125,7 @@ export async function loadProviderUsageSummary(
       timeoutMs + 1000,
       {
         provider: auth.provider,
-        displayName: PROVIDER_LABELS[auth.provider],
+        displayName: getProviderLabel(auth.provider),
         windows: [],
         error: "Timeout",
       },
