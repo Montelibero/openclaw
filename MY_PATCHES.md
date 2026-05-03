@@ -225,6 +225,41 @@ docker pull ghcr.io/montelibero/openclaw:latest
 
 ---
 
+## feat/disable-cooldowns — `disableCooldowns` per-model config
+
+**Status:** in-prod (нужно для прод-бота)
+**Source:** clawdbot `b8bdc0b32` (config: support models that never enter cooldown)
+**Why:** конфиг `agents.defaults.models["<provider>/<model>"].disableCooldowns: true` для моделей-«вечных fallback» (например, бесплатные пулы за custom-роутером). Без этого фолбек-модель попадает в cooldown после rate-limit и блокируется на 25 мин — мне это сломало работу.
+
+**Changes:**
+
+- `src/config/types.agent-defaults.ts` — `AgentModelEntryConfig.disableCooldowns?: boolean`.
+- `src/config/zod-schema.agent-defaults.ts` — `disableCooldowns: z.boolean().optional()` в записи `models[*]` (`.strict()`-объект).
+- `src/agents/auth-profiles/usage.ts`:
+  - `isModelCooldownDisabled({ cfg, providerId, modelId })` — поиск по `agents.defaults.models[<provider>/<model>]` с нормализацией provider id.
+  - `computeNextProfileUsageStats` принимает `disableCooldowns?: boolean`. Когда `true` — сразу возвращает обновлённые `errorCount`/`failureCounts`/`lastFailureAt`, очищая `cooldownUntil`/`disabledUntil`/`disabledReason`/`cooldownReason`/`cooldownModel`. Так что provider-wide cooldown'ы для других моделей этой же провайдер-сессии не пишутся.
+  - `markAuthProfileFailure` зовёт `isModelCooldownDisabled` в обоих веток (lock-updater + fallback) и пробрасывает флаг.
+- `src/agents/auth-profiles/usage.test.ts` — 2 новых теста: «не пишет cooldown/disabled когда модель в disableCooldowns», «не блокирует sibling-модель того же провайдера».
+
+**Конфиг (как в проде):**
+
+```jsonc
+{
+  "agents": {
+    "defaults": {
+      "models": {
+        "custom/free_combo": { "disableCooldowns": true },
+        "custom/free_vision_combo": { "disableCooldowns": true },
+      },
+    },
+  },
+}
+```
+
+**Tests:** `pnpm test src/agents/auth-profiles/usage.test.ts` — 62/62 ✓. tsgo:core+test:src ✓. oxfmt ✓.
+
+---
+
 ## Backlog (планируется)
 
 - `chore/docker-startup-log` — startup-log SHA в stderr (опционально, если banner не устраивает). Источник clawdbot `81ba57102`.
