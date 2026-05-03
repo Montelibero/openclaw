@@ -187,6 +187,44 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 
 ---
 
+## chore/personal-docker-amd64 — собственный Docker build pipeline (linux/amd64)
+
+**Status:** in-prod (CI-only, не код)
+**Why:** автоматическая сборка прод-образа из `itolstov/integration` без аппстрим-overhead'а (multi-arch, manifest, релизные гейты). Только x64, только мой форк.
+
+**Changes:**
+
+- `.github/workflows/personal-docker.yml` — **NEW** workflow. Триггер: push в `itolstov/integration` или ручной `workflow_dispatch`. Игнорирует `docs/**`, `*.md`, `.agents/**`, `skills/**`, `MY_PATCHES.md`. Билдит `linux/amd64` (без arm64), пушит в `ghcr.io/<owner>/openclaw:latest` (lowercased), GHA-кэш для buildx.
+
+**Не трогаем upstream:**
+
+- Upstream `.github/workflows/docker-release.yml` остаётся as-is — апстрим-merge не конфликтует.
+- Upstream workflow триггерится только на пуш `v*`-тегов; в форке такие теги не появляются автоматически — workflow «спит».
+- При желании можно отключить через GitHub UI: Settings → Actions → Workflows → Docker Release → Disable.
+
+**Как использовать:**
+
+```bash
+# После любого merge в itolstov/integration:
+git push origin itolstov/integration
+# → запускается personal-docker.yml
+# → собирается linux/amd64
+# → пушится ghcr.io/montelibero/openclaw:latest
+
+# В проде:
+docker pull ghcr.io/montelibero/openclaw:latest
+```
+
+**Что НЕ переносилось из upstream docker-release.yml:**
+
+- `build-arm64` job — ARM не нужен.
+- `manifest-combine` job — единственная архитектура, manifest не нужен.
+- Tag-based triggers (`push: tags: v*`) — у меня нет публичных тегов в форке.
+- Backfill workflow_dispatch с `tag` input — не использую.
+- OCI labels через `org.opencontainers.image.revision` (можно добавить позже).
+
+---
+
 ## Backlog (планируется)
 
 - `chore/docker-startup-log` — startup-log SHA в stderr (опционально, если banner не устраивает). Источник clawdbot `81ba57102`.
