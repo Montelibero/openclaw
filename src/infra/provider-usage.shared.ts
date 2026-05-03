@@ -30,6 +30,10 @@ export function isOAuthOnlyUsageProvider(provider: UsageProviderId): boolean {
   return provider === "openai";
 }
 
+export function getProviderLabel(provider: UsageProviderId): string {
+  return resolveProviderUsageDisplayName(provider);
+}
+
 /** Maps model/provider ids and credential type into a normalized usage provider id. */
 export function resolveUsageProviderId(
   provider?: string | null,
