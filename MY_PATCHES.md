@@ -273,6 +273,11 @@ docker pull ghcr.io/montelibero/openclaw:latest
 - Первая сборка после смены — длинная (12-15 мин, надо засеять кэш). Последующие — 3-7 мин если только код меняется.
 - `:buildcache` тег в GHCR — отдельный package, можно почистить если разрастётся (`gh api -X DELETE /user/packages/container/openclaw%2Fbuildcache/versions/<id>`).
 
+**Доп. apt-пакеты:**
+
+- В runtime образ ставится `openssh-client` через `build-args: OPENCLAW_DOCKER_APT_PACKAGES=openssh-client` (upstream Dockerfile уже поддерживает этот ARG для слим-image, не нужно его патчить).
+- Если понадобятся ещё пакеты — дополнить список через пробел: `openssh-client wget postgresql-client`.
+
 ---
 
 ## feat/disable-cooldowns — `disableCooldowns` per-model config
