@@ -1,0 +1,15 @@
+{
+  "id": "telegram-user",
+  "activation": {
+    "onStartup": false
+  },
+  "channels": ["telegram-user"],
+  "channelEnvVars": {
+    "telegram-user": ["TELEGRAM_USER_API_ID", "TELEGRAM_USER_API_HASH", "TELEGRAM_USER_BOT_TOKEN"]
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
