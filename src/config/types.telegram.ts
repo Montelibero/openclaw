@@ -196,6 +196,8 @@ export type TelegramAccountConfig = {
   webhookCertPath?: string;
   /** Per-action tool gating (default: true for all). */
   actions?: TelegramActionConfig;
+  /** Allow advanced raw Telegram Bot API calls via `telegram_raw` tool. */
+  allowRawApi?: boolean;
   /** Telegram thread/conversation binding overrides. */
   threadBindings?: TelegramThreadBindingsConfig;
   /**
