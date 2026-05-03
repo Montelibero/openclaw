@@ -27,6 +27,10 @@ export const usageProviders: UsageProviderId[] = [
   "zai",
 ];
 
+export function getProviderLabel(provider: UsageProviderId): string {
+  return PROVIDER_LABELS[provider] ?? provider;
+}
+
 export function resolveUsageProviderId(provider?: string | null): UsageProviderId | undefined {
   if (!provider) {
     return undefined;

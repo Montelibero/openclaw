@@ -24,4 +24,7 @@ export type UsageProviderId =
   | "minimax"
   | "openai-codex"
   | "xiaomi"
-  | "zai";
+  | "zai"
+  // Allow custom provider ids (e.g. user-configured providers with baseUrl
+  // hitting `/v1/limits`). Keeps autocomplete for known ids.
+  | (string & {});
