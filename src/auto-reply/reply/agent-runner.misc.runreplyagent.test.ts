@@ -3192,6 +3192,45 @@ describe("runReplyAgent response usage footer", () => {
     expect(text).not.toContain("Usage:");
     expect(text).not.toContain("· session ");
   });
+
+  it("shows the model name in the usage footer", async () => {
+    runEmbeddedPiAgentMock.mockResolvedValueOnce({
+      payloads: [{ text: "ok" }],
+      meta: {
+        agentMeta: {
+          provider: "anthropic",
+          model: "claude",
+          usage: { input: 12, output: 3 },
+        },
+      },
+    });
+
+    const sessionKey = "agent:main:whatsapp:dm:+1100";
+    const res = await createRun({ responseUsage: "tokens", sessionKey });
+    const payload = Array.isArray(res) ? res[0] : res;
+    const text = payload?.text ?? "";
+    expect(text).toContain("· model claude");
+  });
+
+  it("strips provider prefix from the model in the usage footer", async () => {
+    runEmbeddedPiAgentMock.mockResolvedValueOnce({
+      payloads: [{ text: "ok" }],
+      meta: {
+        agentMeta: {
+          provider: "custom",
+          model: "stepfun/step-3.5-flash",
+          usage: { input: 12, output: 3 },
+        },
+      },
+    });
+
+    const sessionKey = "agent:main:whatsapp:dm:+1101";
+    const res = await createRun({ responseUsage: "tokens", sessionKey });
+    const payload = Array.isArray(res) ? res[0] : res;
+    const text = payload?.text ?? "";
+    expect(text).toContain("· model step-3.5-flash");
+    expect(text).not.toContain("stepfun/");
+  });
 });
 
 describe("runReplyAgent transient HTTP retry", () => {
