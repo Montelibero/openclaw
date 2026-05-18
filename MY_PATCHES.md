@@ -284,8 +284,8 @@ docker pull ghcr.io/montelibero/openclaw:latest
 
 **Доп. apt-пакеты:**
 
-- В runtime образ ставятся `openssh-client` и `cmake` через `build-args: OPENCLAW_DOCKER_APT_PACKAGES=openssh-client cmake` (upstream Dockerfile уже поддерживает этот ARG для слим-image, не нужно его патчить).
-- Если понадобятся ещё пакеты — дополнить список через пробел: `openssh-client cmake wget postgresql-client`.
+- В runtime образ ставятся `openssh-client` и `build-essential` через `build-args: OPENCLAW_DOCKER_APT_PACKAGES=openssh-client build-essential` (upstream Dockerfile уже поддерживает этот ARG для слим-image, не нужно его патчить).
+- Если понадобится `cmake`, его нужно добавить отдельно: `openssh-client build-essential cmake`.
 
 ---
 
