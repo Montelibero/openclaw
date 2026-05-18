@@ -4,12 +4,21 @@ This file tracks personal patches that ship on the `itolstov/integration` branch
 
 Convention:
 
-- `main` = clean mirror of `origin/main` (upstream openclaw). No personal commits.
+- `origin` = fork remote (`Montelibero/openclaw`).
+- `upstream` = official OpenClaw remote (`openclaw/openclaw`). Keep it configured, but do not update from it while the upstream branch is in a beta window.
+- `main` = clean mirror of `origin/main`. No personal commits. `origin/main` should only be fast-forwarded from `upstream/main` when we intentionally resume upstream updates.
 - `feat/*`, `chore/*` = thematic source branches, atomic and rebaseable onto upstream.
 - `chore/my-patches` = this file lives here on its own branch so it survives `itolstov/integration` rebuilds.
 - `itolstov/integration` = `main` + merged `feat/*` + merged `chore/my-patches`; daily-driver, source for prod docker builds.
 
 Update this file on `chore/my-patches` whenever a feat/chore branch lands on `itolstov/integration` (or gets dropped because upstream absorbed it). Then re-merge `chore/my-patches` into `itolstov/integration`.
+
+Overlay workflow status:
+
+- `itolstov/integration` intentionally replaces the generic `deploy` name from `fork-overlay-workflow.md`.
+- `chore/my-patches` + this file intentionally replace the generic `local/meta` + `BRANCHES.md` registry.
+- `rerere.enabled` should be `true` in this worktree before rebasing source branches.
+- Upstream update is currently paused: do not run `git fetch upstream`, rebase source branches onto `upstream/main`, or reset/rebuild `main` from upstream until the beta window is over.
 
 Rebuild flow on upstream update:
 
