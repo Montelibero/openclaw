@@ -1,6 +1,6 @@
 # Local stack on top of upstream openclaw
 
-This file tracks personal patches that ship on the `itolstov/integration` branch (and its `feat/*`/`chore/*` source branches) on top of the openclaw upstream `main`. Each entry is one feature, one branch.
+This file tracks personal patches that ship on the `deploy` branch (and its `feat/*`/`chore/*` source branches) on top of the openclaw upstream `main`. Each entry is one feature, one branch.
 
 Convention:
 
@@ -8,14 +8,14 @@ Convention:
 - `upstream` = official OpenClaw remote (`openclaw/openclaw`). Keep it configured, but do not update from it while the upstream branch is in a beta window.
 - `main` = clean mirror of `origin/main`. No personal commits. `origin/main` should only be fast-forwarded from `upstream/main` when we intentionally resume upstream updates.
 - `feat/*`, `chore/*` = thematic source branches, atomic and rebaseable onto upstream.
-- `chore/my-patches` = this file lives here on its own branch so it survives `itolstov/integration` rebuilds.
-- `itolstov/integration` = `main` + merged `feat/*` + merged `chore/my-patches`; daily-driver, source for prod docker builds.
+- `chore/my-patches` = this file lives here on its own branch so it survives `deploy` rebuilds.
+- `deploy` = `main` + merged `feat/*` + merged `chore/my-patches`; daily-driver, source for prod docker builds.
 
-Update this file on `chore/my-patches` whenever a feat/chore branch lands on `itolstov/integration` (or gets dropped because upstream absorbed it). Then re-merge `chore/my-patches` into `itolstov/integration`.
+Update this file on `chore/my-patches` whenever a feat/chore branch lands on `deploy` (or gets dropped because upstream absorbed it). Then re-merge `chore/my-patches` into `deploy`.
 
 Overlay workflow status:
 
-- `itolstov/integration` intentionally replaces the generic `deploy` name from `fork-overlay-workflow.md`.
+- `deploy` follows the generic deploy branch name from `fork-overlay-workflow.md`.
 - `chore/my-patches` + this file intentionally replace the generic `local/meta` + `BRANCHES.md` registry.
 - `rerere.enabled` should be `true` in this worktree before rebasing source branches.
 - Upstream update is currently paused: do not run `git fetch upstream`, rebase source branches onto `upstream/main`, or reset/rebuild `main` from upstream until the beta window is over.
@@ -42,8 +42,8 @@ for b in \
   git checkout $b && git rebase main
 done
 
-# Пересобрать integration
-git checkout itolstov/integration && git reset --hard main
+# Пересобрать deploy
+git checkout deploy && git reset --hard main
 git merge --no-ff feat/usage-footer-model
 git merge --no-ff feat/usage-footer-response-model
 git merge --no-ff feat/usage-limits-custom-providers
@@ -67,7 +67,7 @@ git add src/config/schema.base.generated.ts \
 git commit -m "chore(config): regenerate channel + base schema artifacts"
 
 # Push
-git push --force-with-lease origin <each-rebased-branch> itolstov/integration
+git push --force-with-lease origin <each-rebased-branch> deploy
 ```
 
 Source archive of older patches (from the previous fork `clawdbot`): see `~/Projects/other/clawdbot/itolstov-contributions.md`.
@@ -240,11 +240,11 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 ## chore/personal-docker-amd64 — собственный Docker build pipeline (linux/amd64)
 
 **Status:** in-prod (CI-only, не код)
-**Why:** автоматическая сборка прод-образа из `itolstov/integration` без аппстрим-overhead'а (multi-arch, manifest, релизные гейты). Только x64, только мой форк.
+**Why:** автоматическая сборка прод-образа из `deploy` без аппстрим-overhead'а (multi-arch, manifest, релизные гейты). Только x64, только мой форк.
 
 **Changes:**
 
-- `.github/workflows/personal-docker.yml` — **NEW** workflow. Триггер: push в `itolstov/integration` или ручной `workflow_dispatch`. Игнорирует `docs/**`, `*.md`, `.agents/**`, `skills/**`, `MY_PATCHES.md`. Билдит `linux/amd64` (без arm64), пушит в `ghcr.io/<owner>/openclaw:latest` (lowercased), GHA-кэш для buildx.
+- `.github/workflows/personal-docker.yml` — **NEW** workflow. Триггер: push в `deploy` или ручной `workflow_dispatch`. Игнорирует `docs/**`, `*.md`, `.agents/**`, `skills/**`, `MY_PATCHES.md`. Билдит `linux/amd64` (без arm64), пушит в `ghcr.io/<owner>/openclaw:latest` (lowercased), GHA-кэш для buildx.
 
 **Не трогаем upstream:**
 
@@ -255,8 +255,8 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 **Как использовать:**
 
 ```bash
-# После любого merge в itolstov/integration:
-git push origin itolstov/integration
+# После любого merge в deploy:
+git push origin deploy
 # → запускается personal-docker.yml
 # → собирается linux/amd64
 # → пушится ghcr.io/montelibero/openclaw:latest
