@@ -4,9 +4,9 @@ This file tracks personal patches that ship on the `deploy` branch (and its `fea
 
 Convention:
 
-- `origin` = fork remote (`Montelibero/openclaw`).
+- `fork` = fork remote (`Montelibero/openclaw`).
 - `upstream` = official OpenClaw remote (`openclaw/openclaw`). Keep it configured, but do not update from it while the upstream branch is in a beta window.
-- `main` = clean mirror of `origin/main`. No personal commits. `origin/main` should only be fast-forwarded from `upstream/main` when we intentionally resume upstream updates.
+- `main` = clean mirror of `fork/main`. No personal commits. `fork/main` should only be fast-forwarded from `upstream/main` when we intentionally resume upstream updates.
 - `feat/*`, `chore/*` = thematic source branches, atomic and rebaseable onto upstream.
 - `chore/my-patches` = this file lives here on its own branch so it survives `deploy` rebuilds.
 - `deploy` = `main` + merged `feat/*` + merged `chore/my-patches`; daily-driver, source for prod docker builds.
@@ -23,8 +23,8 @@ Overlay workflow status:
 Rebuild flow on upstream update:
 
 ```bash
-git fetch origin
-git checkout main && git reset --hard origin/main
+git fetch fork
+git checkout main && git reset --hard fork/main
 
 # Rebase каждую feat/* и chore/* ветку
 for b in \
@@ -67,7 +67,7 @@ git add src/config/schema.base.generated.ts \
 git commit -m "chore(config): regenerate channel + base schema artifacts"
 
 # Push
-git push --force-with-lease origin <each-rebased-branch> deploy
+git push --force-with-lease fork <each-rebased-branch> deploy
 ```
 
 Source archive of older patches (from the previous fork `clawdbot`): see `~/Projects/other/clawdbot/itolstov-contributions.md`.
@@ -256,7 +256,7 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 
 ```bash
 # После любого merge в deploy:
-git push origin deploy
+git push fork deploy
 # → запускается personal-docker.yml
 # → собирается linux/amd64
 # → пушится ghcr.io/montelibero/openclaw:latest
