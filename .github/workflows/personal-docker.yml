@@ -68,4 +68,4 @@ jobs:
           provenance: false
           build-args: |
             BUILDKIT_INLINE_CACHE=1
-            OPENCLAW_DOCKER_APT_PACKAGES=openssh-client cmake
+            OPENCLAW_DOCKER_APT_PACKAGES=openssh-client build-essential
