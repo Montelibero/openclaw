@@ -1,12 +1,12 @@
 name: Personal Docker (itolstov)
 
-# Builds the personal `itolstov/integration` stack as a single linux/amd64
+# Builds the personal `deploy` stack as a single linux/amd64
 # image and publishes to ghcr.io/<owner>/openclaw:latest. Lives in the fork
 # only; upstream's docker-release workflow stays untouched.
 
 on:
   push:
-    branches: [itolstov/integration]
+    branches: [deploy]
     paths-ignore:
       - "docs/**"
       - "**/*.md"
