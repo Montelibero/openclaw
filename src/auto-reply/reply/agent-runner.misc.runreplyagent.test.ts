@@ -1774,6 +1774,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
       sessionId: "session",
       updatedAt: Date.now(),
       traceLevel: "raw",
+      responseUsage: "off",
     };
 
     await fs.writeFile(storePath, JSON.stringify({ [sessionKey]: sessionEntry }, null, 2), "utf-8");
@@ -3226,7 +3227,9 @@ describe("runReplyAgent response usage footer", () => {
 
     const sessionKey = "agent:main:whatsapp:dm:+1101";
     const res = await createRun({ responseUsage: "tokens", sessionKey });
-    const payload = Array.isArray(res) ? res[0] : res;
+    const payload = (Array.isArray(res) ? res : [res]).find((entry) =>
+      entry?.text?.includes("Usage:"),
+    );
     const text = payload?.text ?? "";
     expect(text).toContain("· model step-3.5-flash");
     expect(text).not.toContain("stepfun/");
