@@ -33,6 +33,7 @@ for b in \
   feat/usage-limits-custom-providers \
   feat/telegram-raw-tool \
   feat/telegram-healthcheck \
+  feat/telegram-dm-topic-sessions \
   feat/extension-telegram-user \
   feat/disable-cooldowns \
   feat/usage-default-tokens \
@@ -50,6 +51,7 @@ git merge --no-ff feat/usage-footer-response-model
 git merge --no-ff feat/usage-limits-custom-providers
 git merge --no-ff feat/telegram-raw-tool
 git merge --no-ff feat/telegram-healthcheck
+git merge --no-ff feat/telegram-dm-topic-sessions
 git merge --no-ff feat/extension-telegram-user
 git merge --no-ff feat/disable-cooldowns
 git merge --no-ff feat/usage-default-tokens
@@ -174,6 +176,26 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 - `extensions/telegram/src/probe.test.ts` — тест "captures pending_update_count from getWebhookInfo".
 
 **Tests:** `pnpm test extensions/telegram/src/probe.test.ts` — 12/12 ✓. tsgo:extensions ✓.
+
+---
+
+## feat/telegram-dm-topic-sessions — личные Telegram topics как отдельные sessions
+
+**Status:** in-prod
+**Source:** clawdbot behavior around DM topics (`src/telegram/bot-message-context.ts`, `bot.ts`, `bot-native-commands.ts`) + OpenClaw topic routing seams.
+**Why:** в личке Telegram topics приходят как `message_thread_id`; при flat DM session несколько топиков смешиваются, а outbound без явного target может ответить в главный или не тот топик. Нужно, чтобы каждый личный topic был отдельной session и текущая session восстанавливала topic для outbound.
+
+**Changes:**
+
+- `extensions/telegram/src/bot/helpers.ts` — default `dm.threadReplies` стал `"inbound"` вместо `"off"`. Явный `channels.telegram.dm.threadReplies: "off"` или `direct.<chatId>.threadReplies: "off"` сохраняет старое flat-поведение.
+- `extensions/telegram/src/channel.ts` — outbound route теперь восстанавливает DM topic из `currentSessionKey` даже при `session.dmScope: "main"`.
+- `extensions/telegram/src/*test.ts` — обновлены тесты для default-isolated DM topics и opt-out через `"off"`.
+- `docs/channels/telegram.md`, `config-ui-hints.ts` — документация/подсказки синхронизированы с новым default.
+
+**Verification:**
+
+- `pnpm_config_verify_deps_before_run=false corepack pnpm test extensions/telegram/src/bot/helpers.test.ts extensions/telegram/src/bot-message-context.dm-threads.test.ts extensions/telegram/src/session-route.test.ts` — 95/95 ✓.
+- `pnpm_config_verify_deps_before_run=false corepack pnpm test extensions/telegram/src/bot-message-context.dm-topic-threadid.test.ts extensions/telegram/src/bot-message-context.thread-binding.test.ts extensions/telegram/src/bot-native-commands.test.ts extensions/telegram/src/bot-message-dispatch.test.ts extensions/telegram/src/reply-parameters.test.ts extensions/telegram/src/action-threading.test.ts` — 104/104 ✓.
 
 ---
 
