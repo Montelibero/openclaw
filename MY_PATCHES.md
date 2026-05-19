@@ -40,6 +40,7 @@ for b in \
   chore/my-patches \
   chore/personal-docker-amd64 \
   chore/pnpm-docker-build-approvals \
+  chore/pnpm-docker-prod-prune \
 ; do
   git checkout $b && git rebase main
 done
@@ -58,6 +59,7 @@ git merge --no-ff feat/usage-default-tokens
 git merge --no-ff chore/my-patches
 git merge --no-ff chore/personal-docker-amd64
 git merge --no-ff chore/pnpm-docker-build-approvals
+git merge --no-ff chore/pnpm-docker-prod-prune
 
 # ВАЖНО: после merge'ов перегенерировать config-схемы
 # (allowRawApi для telegram, disableCooldowns для models[*]).
@@ -325,6 +327,21 @@ docker pull ghcr.io/montelibero/openclaw:latest
 **Verification:**
 
 - `CI=true corepack pnpm install --frozen-lockfile --config.minimum-release-age=0 --config.resolution-mode=highest` — проходит на pnpm 11.1.0.
+
+---
+
+## chore/pnpm-docker-prod-prune — prefetch prod store before Docker prune
+
+**Status:** in-prod (build config)
+**Why:** после первого pnpm 11 fix Docker build дошёл до `runtime-assets`, но `pnpm prune --prod --offline` упал с `ERR_PNPM_NO_OFFLINE_TARBALL` на `@grammyjs/types@3.26.0`. BuildKit cache mount может не содержать все prod tarballs, которые `prune --prod` хочет добавить/пересобрать в runtime-assets stage.
+
+**Changes:**
+
+- `Dockerfile` — перед offline `pnpm prune --prod` выполняется `pnpm fetch --prod` с теми же supportedArchitectures, чтобы prod tarballs были в pnpm store.
+
+**Verification:**
+
+- `Personal Docker (itolstov)` on `deploy` is the target proof for this branch.
 
 ---
 
