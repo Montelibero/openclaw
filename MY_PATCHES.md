@@ -330,14 +330,14 @@ docker pull ghcr.io/montelibero/openclaw:latest
 
 ---
 
-## chore/pnpm-docker-prod-prune — prefetch prod store before Docker prune
+## chore/pnpm-docker-prod-prune — allow Docker prod prune to hydrate store
 
 **Status:** in-prod (build config)
 **Why:** после первого pnpm 11 fix Docker build дошёл до `runtime-assets`, но `pnpm prune --prod --offline` упал с `ERR_PNPM_NO_OFFLINE_TARBALL` на `@grammyjs/types@3.26.0`. BuildKit cache mount может не содержать все prod tarballs, которые `prune --prod` хочет добавить/пересобрать в runtime-assets stage.
 
 **Changes:**
 
-- `Dockerfile` — перед offline `pnpm prune --prod` выполняется `pnpm fetch --prod` с теми же supportedArchitectures, чтобы prod tarballs были в pnpm store.
+- `Dockerfile` — `pnpm prune --prod` больше не запускается с `--config.offline=true`; lockfile остаётся frozen/up-to-date, но prune может докачать отсутствующий tarball в pnpm store.
 
 **Verification:**
 
