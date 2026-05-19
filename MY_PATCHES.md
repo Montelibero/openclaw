@@ -38,6 +38,7 @@ for b in \
   feat/usage-default-tokens \
   chore/my-patches \
   chore/personal-docker-amd64 \
+  chore/pnpm-docker-build-approvals \
 ; do
   git checkout $b && git rebase main
 done
@@ -54,6 +55,7 @@ git merge --no-ff feat/disable-cooldowns
 git merge --no-ff feat/usage-default-tokens
 git merge --no-ff chore/my-patches
 git merge --no-ff chore/personal-docker-amd64
+git merge --no-ff chore/pnpm-docker-build-approvals
 
 # ВАЖНО: после merge'ов перегенерировать config-схемы
 # (allowRawApi для telegram, disableCooldowns для models[*]).
@@ -286,6 +288,21 @@ docker pull ghcr.io/montelibero/openclaw:latest
 
 - В runtime образ ставятся `openssh-client`, `build-essential` и `cmake` через `build-args: OPENCLAW_DOCKER_APT_PACKAGES=openssh-client build-essential cmake` (upstream Dockerfile уже поддерживает этот ARG для слим-image, не нужно его патчить).
 - Если понадобятся ещё пакеты — дополнить список через пробел: `openssh-client build-essential cmake wget postgresql-client`.
+
+---
+
+## chore/pnpm-docker-build-approvals — pnpm 11 install approvals for Docker
+
+**Status:** in-prod (build config)
+**Why:** после upstream update до pnpm 11 `Dockerfile` падал на `pnpm install --frozen-lockfile` с `ERR_PNPM_IGNORED_BUILDS` для optional/transitive packages `bufferutil`, `es5-ext`, `utf-8-validate`. Эти build scripts не нужны для нашего runtime Docker path, поэтому явно запрещены, чтобы `strictDepBuilds` считал решение reviewed.
+
+**Changes:**
+
+- `pnpm-workspace.yaml` — `allowBuilds` получает `bufferutil: false`, `es5-ext: false`, `utf-8-validate: false`.
+
+**Verification:**
+
+- `CI=true corepack pnpm install --frozen-lockfile --config.minimum-release-age=0 --config.resolution-mode=highest` — проходит на pnpm 11.1.0.
 
 ---
 
