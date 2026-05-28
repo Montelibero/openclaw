@@ -260,6 +260,7 @@ type MutableAssistantOutput = {
   stopReason: string;
   timestamp: number;
   responseId?: string;
+  responseModel?: string;
   errorMessage?: string;
   errorCode?: string;
   errorType?: string;
@@ -3106,6 +3107,9 @@ async function processOpenAICompletionsStream(
     const chunk = rawChunk as ChatCompletionChunk;
     output.responseId ||= chunk.id;
     let hasReasoningUsageActivity = false;
+    if (typeof chunk.model === "string" && chunk.model.trim()) {
+      output.responseModel ||= chunk.model;
+    }
     if (chunk.usage) {
       output.usage = parseTransportChunkUsage(chunk.usage, model);
       hasReasoningUsageActivity = hasOpenAICompletionsReasoningUsageActivity(chunk.usage);
