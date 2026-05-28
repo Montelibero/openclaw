@@ -30,6 +30,7 @@ git checkout main && git reset --hard fork/main
 for b in \
   feat/usage-footer-model \
   feat/usage-footer-response-model \
+  feat/openai-chat-response-model \
   feat/usage-limits-custom-providers \
   feat/telegram-raw-tool \
   feat/telegram-healthcheck \
@@ -49,6 +50,7 @@ done
 git checkout deploy && git reset --hard main
 git merge --no-ff feat/usage-footer-model
 git merge --no-ff feat/usage-footer-response-model
+git merge --no-ff feat/openai-chat-response-model
 git merge --no-ff feat/usage-limits-custom-providers
 git merge --no-ff feat/telegram-raw-tool
 git merge --no-ff feat/telegram-healthcheck
@@ -98,6 +100,12 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 
 - `src/agents/pi-embedded-runner/run/helpers.ts` — `resolveReportedModelRef` принимает `assistant.responseModel?` и предпочитает его перед `assistant.model`. pi-ai 0.71.1 в `AssistantMessage.responseModel` уже сохраняет реальную upstream-модель ответа (отдельно от `model` = запрос).
 - `helpers.test.ts` — 5 тестов покрывают: prefers responseModel / falls back to assistant.model / falls back to request / no provider but responseModel / embedded harness ignores responseModel.
+
+**Связанный fix `feat/openai-chat-response-model`:** реальный OpenAI-compatible ответ может прийти как JSON `chat.completion` даже на streaming-запросе; если запрошен alias `default_combo`, а JSON содержит `model: "gpt-5.4"`, футер должен показывать модель из ответа.
+
+- `src/agents/provider-transport-fetch.ts` — JSON fallback для OpenAI SDK теперь конвертирует `chat.completion` в совместимые `chat.completion.chunk` SSE events, сохраняя `model`, `usage` и `reasoning_content`.
+- `src/agents/openai-transport-stream.ts` — `processOpenAICompletionsStream` переносит `chunk.model` в `assistant.responseModel`.
+- Tests: `provider-transport-fetch.test.ts` покрывает JSON `chat.completion` -> chunks с `model: "gpt-5.4"`; `openai-transport-stream.test.ts` покрывает финальное `responseModel` при request `default_combo`.
 
 ---
 
