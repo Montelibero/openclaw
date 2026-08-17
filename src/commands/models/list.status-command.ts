@@ -918,6 +918,12 @@ export async function modelsStatusCommand(
     const oauthProfiles = authHealth.profiles.filter(
       (profile) => profile.type === "oauth" || profile.type === "token",
     );
+    const customProvidersWithBaseUrl = new Set<string>();
+    for (const [id, providerConfig] of Object.entries(cfg.models?.providers ?? {})) {
+      if (providerConfig?.baseUrl) {
+        customProvidersWithBaseUrl.add(id);
+      }
+    }
 
     const unusableProfiles = (() => {
       const now = Date.now();
@@ -1244,20 +1250,21 @@ export async function modelsStatusCommand(
 
     runtime.log("");
     runtime.log(colorize(rich, theme.heading, "OAuth/token status"));
-    if (oauthProfiles.length === 0) {
+    if (oauthProfiles.length === 0 && customProvidersWithBaseUrl.size === 0) {
       runtime.log(colorize(rich, theme.muted, "- none"));
     } else {
       const { formatUsageWindowSummary, loadProviderUsageSummary, resolveUsageProviderId } =
         await loadProviderUsageRuntime();
       const usageByProvider = new Map<string, string>();
       const usageProviders = Array.from(
-        new Set(
-          oauthProfiles
+        new Set([
+          ...oauthProfiles
             .map((profile) =>
               resolveUsageProviderId(profile.provider, { credentialType: profile.type }),
             )
             .filter((provider): provider is NonNullable<typeof provider> => Boolean(provider)),
-        ),
+          ...customProvidersWithBaseUrl,
+        ]),
       );
       if (usageProviders.length > 0) {
         try {
@@ -1306,15 +1313,25 @@ export async function modelsStatusCommand(
           profilesByProvider.set(profile.provider, [profile]);
         }
       }
+      for (const provider of customProvidersWithBaseUrl) {
+        if (!profilesByProvider.has(provider)) {
+          profilesByProvider.set(provider, []);
+        }
+      }
 
-      for (const [provider, profiles] of profilesByProvider) {
+      let printedProvider = false;
+      for (const provider of Array.from(profilesByProvider.keys()).toSorted()) {
+        const profiles = profilesByProvider.get(provider) ?? [];
         const usageProfile = profiles.find(
           (profile) => profile.type === "oauth" || profile.type === "token",
         );
-        const usageKey = resolveUsageProviderId(provider, {
-          credentialType: usageProfile?.type,
-        });
+        const usageKey =
+          resolveUsageProviderId(provider, { credentialType: usageProfile?.type }) ?? provider;
         const usage = usageKey ? usageByProvider.get(usageKey) : undefined;
+        if (profiles.length === 0 && !usage) {
+          continue;
+        }
+        printedProvider = true;
         const usageSuffix = usage ? colorize(rich, theme.muted, ` usage: ${usage}`) : "";
         runtime.log(`- ${colorize(rich, theme.heading, provider)}${usageSuffix}`);
         for (const profile of profiles) {
@@ -1329,6 +1346,9 @@ export async function modelsStatusCommand(
                 : " expires unknown";
           runtime.log(`  - ${labelLocal} ${status}${expiry}`);
         }
+      }
+      if (!printedProvider) {
+        runtime.log(colorize(rich, theme.muted, "- none"));
       }
     }
 
