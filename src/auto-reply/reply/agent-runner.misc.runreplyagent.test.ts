@@ -3195,7 +3195,7 @@ describe("runReplyAgent response usage footer", () => {
   });
 
   it("shows the model name in the usage footer", async () => {
-    runEmbeddedPiAgentMock.mockResolvedValueOnce({
+    runEmbeddedAgentMock.mockResolvedValueOnce({
       payloads: [{ text: "ok" }],
       meta: {
         agentMeta: {
@@ -3214,7 +3214,7 @@ describe("runReplyAgent response usage footer", () => {
   });
 
   it("strips provider prefix from the model in the usage footer", async () => {
-    runEmbeddedPiAgentMock.mockResolvedValueOnce({
+    runEmbeddedAgentMock.mockResolvedValueOnce({
       payloads: [{ text: "ok" }],
       meta: {
         agentMeta: {
