@@ -1580,6 +1580,29 @@ describe("dispatchTelegramMessage draft streaming", () => {
     expectRecordFields((delivery.replies as Array<unknown>)[0], { replyToId: "1001" });
   });
 
+  it("requires Telegram inbound answers to send as replies", async () => {
+    dispatchReplyWithBufferedBlockDispatcher.mockImplementation(async ({ dispatcherOptions }) => {
+      await dispatcherOptions.deliver({ text: "Hello", replyToId: "1001" }, { kind: "final" });
+      return { queuedFinal: true };
+    });
+    deliverReplies.mockResolvedValue({ delivered: true });
+
+    await dispatchWithContext({
+      context: createContext({
+        msg: {
+          message_id: 1001,
+        } as unknown as TelegramMessageContext["msg"],
+        ctxPayload: {
+          MessageSid: "1001",
+        } as unknown as TelegramMessageContext["ctxPayload"],
+      }),
+    });
+
+    expectDeliverRepliesParams({
+      requireReplyToMessageId: true,
+    });
+  });
+
   it("keeps answer draft stream for current message replies with native quote candidates", async () => {
     const draftStream = createDraftStream();
     createTelegramDraftStream.mockReturnValue(draftStream);

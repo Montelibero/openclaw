@@ -1289,6 +1289,33 @@ describe("deliverReplies", () => {
     expect(mockCallArg(sendRichMessage, 1, 0)).not.toHaveProperty("reply_to_message_id");
   });
 
+  it("keeps required reply-to fail-closed for rich messages", async () => {
+    const runtime = createRuntime();
+    const sendMessage = vi.fn().mockResolvedValue({
+      message_id: 11,
+      chat: { id: "123" },
+    });
+    const bot = createBot({ sendMessage });
+
+    await deliverWith({
+      replies: [{ text: "Hello there", replyToId: "500" }],
+      runtime,
+      bot,
+      replyToMode: "first",
+      requireReplyToMessageId: true,
+      richMessages: true,
+    });
+
+    const raw = bot.api.raw as unknown as {
+      sendRichMessage: ReturnType<typeof vi.fn>;
+    };
+    const params = firstMockCallArg(raw.sendRichMessage, 0) as {
+      reply_parameters?: Record<string, unknown>;
+    };
+    expect(params.reply_parameters).toMatchObject({ message_id: 500 });
+    expect(params.reply_parameters).not.toHaveProperty("allow_sending_without_reply");
+  });
+
   it("skips rich entity detection for reply text with provider-prefixed email addresses", async () => {
     const runtime = createRuntime();
     const sendMessage = vi.fn().mockResolvedValue({
@@ -1564,6 +1591,40 @@ describe("deliverReplies", () => {
     }
   });
 
+  it("keeps required reply-to when later voice media falls back to text", async () => {
+    const runtime = createRuntime();
+    const sendPhoto = vi.fn().mockResolvedValue({ message_id: 4, chat: { id: "123" } });
+    const sendVoice = vi.fn().mockRejectedValue(createVoiceMessagesForbiddenError());
+    const sendMessage = vi.fn().mockResolvedValue({ message_id: 5, chat: { id: "123" } });
+    const bot = createBot({ sendPhoto, sendVoice, sendMessage });
+
+    mockMediaLoad("photo.jpg", "image/jpeg", "image");
+    mockMediaLoad("note.ogg", "audio/ogg", "voice");
+
+    await deliverWith({
+      replies: [
+        {
+          mediaUrls: ["https://example.com/photo.jpg", "https://example.com/note.ogg"],
+          text: "Hello there",
+          audioAsVoice: true,
+          replyToId: "700",
+        },
+      ],
+      runtime,
+      bot,
+      replyToMode: "first",
+      requireReplyToMessageId: true,
+    });
+
+    expect(sendPhoto).toHaveBeenCalledTimes(1);
+    expect(sendVoice).toHaveBeenCalledTimes(1);
+    expect(sendMessage).toHaveBeenCalledTimes(1);
+    const fallbackParams = expectRecordFields(mockCallArg(sendMessage, 0, 2), {
+      reply_to_message_id: 700,
+    });
+    expect(fallbackParams).not.toHaveProperty("allow_sending_without_reply");
+  });
+
   it("uses spokenText only after voice rejection", async () => {
     const { runtime, sendVoice, sendMessage, bot } = createVoiceFailureHarness({
       voiceError: createVoiceMessagesForbiddenError(),
@@ -1796,6 +1857,34 @@ describe("deliverReplies", () => {
     for (const call of sendMessage.mock.calls) {
       expect(call[2]).not.toHaveProperty("reply_to_message_id");
       expect(call[2]).not.toHaveProperty("reply_parameters");
+    }
+  });
+
+  it("keeps required reply-to on every chunked inbound answer", async () => {
+    const runtime = createRuntime();
+    const sendMessage = vi.fn().mockResolvedValue({
+      message_id: 20,
+      chat: { id: "123" },
+    });
+    const bot = createBot({ sendMessage });
+
+    await deliverReplies({
+      replies: [{ text: "chunk-one\n\nchunk-two", replyToId: "700" }],
+      chatId: "123",
+      token: "tok",
+      runtime,
+      bot,
+      replyToMode: "first",
+      requireReplyToMessageId: true,
+      textLimit: 12,
+    });
+
+    expect(sendMessage.mock.calls.length).toBeGreaterThanOrEqual(2);
+    for (const call of sendMessage.mock.calls) {
+      const params = expectRecordFields(call[2], {
+        reply_to_message_id: 700,
+      });
+      expect(params).not.toHaveProperty("allow_sending_without_reply");
     }
   });
 

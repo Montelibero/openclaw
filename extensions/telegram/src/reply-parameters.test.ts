@@ -48,6 +48,31 @@ describe("telegram reply parameters", () => {
     });
   });
 
+  it("omits allow_sending_without_reply for required reply targets", () => {
+    expect(
+      buildTelegramThreadReplyParams({
+        replyToMessageId: 77,
+        allowSendingWithoutReply: false,
+      }),
+    ).toEqual({
+      reply_to_message_id: 77,
+    });
+
+    expect(
+      buildTelegramThreadReplyParams({
+        replyToMessageId: 77,
+        replyQuoteText: "quoted",
+        useReplyIdAsQuoteSource: true,
+        allowSendingWithoutReply: false,
+      }),
+    ).toEqual({
+      reply_parameters: {
+        message_id: 77,
+        quote: "quoted",
+      },
+    });
+  });
+
   it("falls back to legacy reply id for blank quotes or mismatched quote sources", () => {
     expect(
       buildTelegramThreadReplyParams({
@@ -85,6 +110,21 @@ describe("telegram reply parameters", () => {
       parse_mode: "HTML",
       reply_to_message_id: 42,
       allow_sending_without_reply: true,
+    });
+  });
+
+  it("keeps native quote retries fail-closed for required reply targets", () => {
+    expect(
+      removeTelegramNativeQuoteParam({
+        parse_mode: "HTML",
+        reply_parameters: {
+          message_id: 42,
+          quote: "quoted",
+        },
+      }),
+    ).toEqual({
+      parse_mode: "HTML",
+      reply_to_message_id: 42,
     });
   });
 

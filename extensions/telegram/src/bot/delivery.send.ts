@@ -104,6 +104,7 @@ export async function sendTelegramText(
     linkPreview?: boolean;
     tableMode?: MarkdownTableMode;
     silent?: boolean;
+    requireReplyToMessageId?: boolean;
     replyMarkup?: ReturnType<typeof buildInlineKeyboard>;
   },
 ): Promise<number> {
@@ -115,6 +116,7 @@ export async function sendTelegramText(
     replyQuoteEntities: opts?.replyQuoteEntities,
     thread: opts?.thread,
     silent: opts?.silent,
+    allowSendingWithoutReply: opts?.requireReplyToMessageId !== true,
   });
   const textMode = opts?.textMode ?? "markdown";
   // Add link_preview_options when link preview is disabled.

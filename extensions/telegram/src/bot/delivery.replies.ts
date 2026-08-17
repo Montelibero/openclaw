@@ -202,6 +202,7 @@ async function deliverTextReply(params: {
   tableMode?: MarkdownTableMode;
   linkPreview?: boolean;
   silent?: boolean;
+  requireReplyToMessageId?: boolean;
   replyToId?: number;
   replyToMode: ReplyToMode;
   progress: DeliveryProgress;
@@ -215,6 +216,7 @@ async function deliverTextReply(params: {
     replyToMode: params.replyToMode,
     replyMarkup: params.replyMarkup,
     replyQuoteText: params.replyQuoteText,
+    requireReplyToMessageId: params.requireReplyToMessageId,
     markDelivered,
     sendChunk: async ({ chunk, replyToMessageId, replyMarkup, replyQuoteText }) => {
       const messageId = await sendTelegramText(
@@ -235,6 +237,7 @@ async function deliverTextReply(params: {
           linkPreview: params.linkPreview,
           tableMode: params.tableMode,
           silent: params.silent,
+          requireReplyToMessageId: params.requireReplyToMessageId,
           replyMarkup,
         },
       );
@@ -258,6 +261,7 @@ async function sendPendingFollowUpText(params: {
   tableMode?: MarkdownTableMode;
   linkPreview?: boolean;
   silent?: boolean;
+  requireReplyToMessageId?: boolean;
   replyToId?: number;
   replyToMode: ReplyToMode;
   progress: DeliveryProgress;
@@ -269,6 +273,7 @@ async function sendPendingFollowUpText(params: {
     replyToId: params.replyToId,
     replyToMode: params.replyToMode,
     replyMarkup: params.replyMarkup,
+    requireReplyToMessageId: params.requireReplyToMessageId,
     markDelivered,
     sendChunk: async ({ chunk, replyToMessageId, replyMarkup }) => {
       await sendTelegramText(params.bot, params.chatId, chunk.text, params.runtime, {
@@ -280,6 +285,7 @@ async function sendPendingFollowUpText(params: {
         linkPreview: params.linkPreview,
         tableMode: params.tableMode,
         silent: params.silent,
+        requireReplyToMessageId: params.requireReplyToMessageId,
         replyMarkup,
       });
     },
@@ -382,6 +388,7 @@ async function sendTelegramVoiceFallbackText(opts: {
   replyMarkup?: ReturnType<typeof buildInlineKeyboard>;
   replyQuoteText?: string;
   replyToMode?: ReplyToMode;
+  requireReplyToMessageId?: boolean;
 }): Promise<number | undefined> {
   let firstDeliveredMessageId: number | undefined;
   const chunks = filterEmptyTelegramTextChunks(opts.chunkText(opts.text));
@@ -392,6 +399,7 @@ async function sendTelegramVoiceFallbackText(opts: {
     replyToMode: opts.replyToMode ?? "first",
     replyMarkup: opts.replyMarkup,
     replyQuoteText: opts.replyQuoteText,
+    requireReplyToMessageId: opts.requireReplyToMessageId,
     quoteOnlyOnFirstChunk: true,
     sendChunk: async ({ chunk, replyToMessageId, replyMarkup, replyQuoteText }) => {
       const messageId = await sendTelegramText(opts.bot, opts.chatId, chunk.text, opts.runtime, {
@@ -407,6 +415,7 @@ async function sendTelegramVoiceFallbackText(opts: {
         linkPreview: opts.linkPreview,
         tableMode: opts.tableMode,
         silent: opts.silent,
+        requireReplyToMessageId: opts.requireReplyToMessageId,
         replyMarkup,
       });
       if (firstDeliveredMessageId == null) {
@@ -433,6 +442,7 @@ async function deliverMediaReply(params: {
   onVoiceRecording?: () => Promise<void> | void;
   linkPreview?: boolean;
   silent?: boolean;
+  requireReplyToMessageId?: boolean;
   replyQuoteMessageId?: number;
   replyQuoteText?: string;
   replyQuotePosition?: number;
@@ -472,11 +482,17 @@ async function deliverMediaReply(params: {
       pendingFollowUpText = followUpText;
     }
     first = false;
-    const replyToMessageId = resolveReplyToForSend({
-      replyToId: params.replyToId,
-      replyToMode: params.replyToMode,
-      progress: params.progress,
-    });
+    if (params.requireReplyToMessageId === true && typeof params.replyToId !== "number") {
+      throw new Error("Telegram inbound reply requires a reply target");
+    }
+    const replyToMessageId =
+      params.requireReplyToMessageId === true
+        ? params.replyToId
+        : resolveReplyToForSend({
+            replyToId: params.replyToId,
+            replyToMode: params.replyToMode,
+            progress: params.progress,
+          });
     const shouldAttachButtonsToMedia = isFirstMedia && params.replyMarkup && !followUpText;
     const videoDimensions = kind === "video" ? await probeVideoDimensions(media.buffer) : undefined;
     const mediaParams: Record<string, unknown> = {
@@ -492,6 +508,7 @@ async function deliverMediaReply(params: {
         replyQuoteEntities: params.replyQuoteEntities,
         thread: params.thread,
         silent: params.silent,
+        allowSendingWithoutReply: params.requireReplyToMessageId !== true,
       }),
     };
     if (isGif) {
@@ -575,11 +592,14 @@ async function deliverMediaReply(params: {
             logVerbose(
               "telegram sendVoice forbidden (recipient has voice messages blocked in privacy settings); falling back to text",
             );
-            const voiceFallbackReplyTo = resolveReplyToForSend({
-              replyToId: params.replyToId,
-              replyToMode: params.replyToMode,
-              progress: params.progress,
-            });
+            const voiceFallbackReplyTo =
+              params.requireReplyToMessageId === true
+                ? params.replyToId
+                : resolveReplyToForSend({
+                    replyToId: params.replyToId,
+                    replyToMode: params.replyToMode,
+                    progress: params.progress,
+                  });
             const fallbackMessageId = await sendTelegramVoiceFallbackText({
               bot: params.bot,
               chatId: params.chatId,
@@ -598,6 +618,7 @@ async function deliverMediaReply(params: {
               replyMarkup: params.replyMarkup,
               replyQuoteText: params.replyQuoteText,
               replyToMode: params.replyToMode,
+              requireReplyToMessageId: params.requireReplyToMessageId,
             });
             if (firstDeliveredMessageId == null) {
               firstDeliveredMessageId = fallbackMessageId;
@@ -623,13 +644,14 @@ async function deliverMediaReply(params: {
                 runtime: params.runtime,
                 text: fallbackText,
                 chunkText: params.chunkText,
-                replyToId: undefined,
+                replyToId: params.requireReplyToMessageId === true ? params.replyToId : undefined,
                 thread: params.thread,
                 richMessages: params.richMessages,
                 tableMode: params.tableMode,
                 linkPreview: params.linkPreview,
                 silent: params.silent,
                 replyMarkup: params.replyMarkup,
+                requireReplyToMessageId: params.requireReplyToMessageId,
               });
               visibleFallbackText = fallbackText;
             }
@@ -684,6 +706,7 @@ async function deliverMediaReply(params: {
         silent: params.silent,
         replyToId: params.replyToId,
         replyToMode: params.replyToMode,
+        requireReplyToMessageId: params.requireReplyToMessageId,
         progress: params.progress,
       });
       pendingFollowUpText = undefined;
@@ -820,6 +843,8 @@ export async function deliverReplies(params: {
   linkPreview?: boolean;
   /** When true, messages are sent with disable_notification. */
   silent?: boolean;
+  /** Inbound answers must fail before sending if Telegram cannot attach a reply target. */
+  requireReplyToMessageId?: boolean;
   /** Message id that the optional quote text belongs to. */
   replyQuoteMessageId?: number;
   /** Optional quote text for Telegram reply_parameters. */
@@ -895,7 +920,9 @@ export async function deliverReplies(params: {
     const reactionEmoji =
       typeof telegramData?.reaction?.emoji === "string" ? telegramData.reaction.emoji : undefined;
     const replyToId =
-      params.replyToMode === "off" ? undefined : resolveTelegramReplyId(reply.replyToId);
+      params.requireReplyToMessageId === true || params.replyToMode !== "off"
+        ? resolveTelegramReplyId(reply.replyToId)
+        : undefined;
     if (reactionEmoji && typeof replyToId !== "number") {
       params.runtime.error?.(danger("Telegram reaction requires a reply target"));
       continue;
@@ -907,6 +934,9 @@ export async function deliverReplies(params: {
       }
       params.runtime.error?.(danger("reply missing text/media"));
       continue;
+    }
+    if (params.requireReplyToMessageId === true && typeof replyToId !== "number") {
+      throw new Error("Telegram inbound reply requires a reply target");
     }
 
     const rawContent = resolvedReplyText;
@@ -998,6 +1028,7 @@ export async function deliverReplies(params: {
           tableMode: params.tableMode,
           linkPreview: params.linkPreview,
           silent: params.silent,
+          requireReplyToMessageId: params.requireReplyToMessageId,
           replyToId,
           replyToMode: params.replyToMode,
           progress,
@@ -1019,6 +1050,7 @@ export async function deliverReplies(params: {
           onVoiceRecording: params.onVoiceRecording,
           linkPreview: params.linkPreview,
           silent: params.silent,
+          requireReplyToMessageId: params.requireReplyToMessageId,
           replyQuoteMessageId: replyQuote.messageId,
           replyQuoteText: replyQuote.text,
           replyQuotePosition: replyQuote.position,

@@ -113,6 +113,7 @@ describe("telegram channel message adapter", () => {
         replyToMessageId: 900,
         replyToIdSource: "implicit",
         replyToMode: "first",
+        requireReplyToMessageId: true,
         accountId: undefined,
         silent: undefined,
         gatewayClientScopes: undefined,
@@ -146,6 +147,7 @@ describe("telegram channel message adapter", () => {
         replyToMessageId: 900,
         replyToIdSource: "implicit",
         replyToMode: "first",
+        requireReplyToMessageId: true,
         accountId: undefined,
         silent: true,
         gatewayClientScopes: undefined,
@@ -181,6 +183,7 @@ describe("telegram channel message adapter", () => {
           replyToMessageId: 900,
           replyToIdSource: "implicit",
           replyToMode: "first",
+          requireReplyToMessageId: true,
           accountId: undefined,
           silent: undefined,
           gatewayClientScopes: undefined,
@@ -199,9 +202,10 @@ describe("telegram channel message adapter", () => {
           cfg: {},
           verbose: false,
           messageThreadId: undefined,
-          replyToMessageId: undefined,
-          replyToIdSource: undefined,
-          replyToMode: undefined,
+          replyToMessageId: 900,
+          replyToIdSource: "implicit",
+          replyToMode: "first",
+          requireReplyToMessageId: true,
           accountId: undefined,
           silent: undefined,
           gatewayClientScopes: undefined,
@@ -252,7 +256,7 @@ describe("telegram channel message adapter", () => {
     });
   });
 
-  it("keeps implicit first replies on the first delivered payload media", async () => {
+  it("keeps required implicit replies on every delivered payload media", async () => {
     const adapter = requireTelegramMessageAdapter();
     sendMessageTelegramMock
       .mockResolvedValueOnce({ messageId: "tg-media-1", chatId: "12345" })
@@ -279,7 +283,7 @@ describe("telegram channel message adapter", () => {
       | { replyToMessageId?: number }
       | undefined;
     expect(firstOpts?.replyToMessageId).toBe(900);
-    expect(secondOpts?.replyToMessageId).toBeUndefined();
+    expect(secondOpts?.replyToMessageId).toBe(900);
   });
 
   it("backs declared live preview finalizer capabilities with adapter proofs", async () => {
