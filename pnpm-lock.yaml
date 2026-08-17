@@ -60,7 +60,7 @@ importers:
         version: 0.80.3
       '@google/genai':
         specifier: 2.10.0
-        version: 2.10.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))
+        version: 2.10.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@grammyjs/runner':
         specifier: 2.0.3
         version: 2.0.3(grammy@1.44.0)
@@ -75,7 +75,7 @@ importers:
         version: 1.2.0-beta.12
       '@mistralai/mistralai':
         specifier: 2.4.0
-        version: 2.4.0(@opentelemetry/api@1.9.1)
+        version: 2.4.0(@opentelemetry/api@1.9.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@modelcontextprotocol/sdk':
         specifier: 1.29.0
         version: 1.29.0(zod@4.4.3)
@@ -156,10 +156,10 @@ importers:
         version: 10.2.5
       node-edge-tts:
         specifier: 1.2.10
-        version: 1.2.10
+        version: 1.2.10(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       openai:
         specifier: 6.45.0
-        version: 6.45.0(@aws-sdk/credential-provider-node@3.972.61)(@smithy/hash-node@4.4.5)(@smithy/signature-v4@5.6.1)(ws@8.21.0)(zod@4.4.3)
+        version: 6.45.0(@aws-sdk/credential-provider-node@3.972.61)(@smithy/hash-node@4.4.5)(@smithy/signature-v4@5.6.1)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod@4.4.3)
       partial-json:
         specifier: 0.1.7
         version: 0.1.7
@@ -204,7 +204,7 @@ importers:
         version: 0.26.10
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       yaml:
         specifier: 2.9.0
         version: 2.9.0
@@ -448,7 +448,7 @@ importers:
         version: 1.3.3
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -482,7 +482,7 @@ importers:
         version: 1.3.3
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -510,7 +510,7 @@ importers:
     dependencies:
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -538,7 +538,7 @@ importers:
         version: 1.3.3
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -557,7 +557,7 @@ importers:
         version: 1.3.3
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -693,7 +693,7 @@ importers:
     dependencies:
       '@discordjs/voice':
         specifier: 0.19.2
-        version: 0.19.2(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
+        version: 0.19.2(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       discord-api-types:
         specifier: 0.38.49
         version: 0.38.49
@@ -708,7 +708,7 @@ importers:
         version: 8.5.0
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -761,7 +761,7 @@ importers:
     dependencies:
       '@larksuiteoapi/node-sdk':
         specifier: 1.68.0
-        version: 1.68.0
+        version: 1.68.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       typebox:
         specifier: 1.3.3
         version: 1.3.3
@@ -825,7 +825,7 @@ importers:
     dependencies:
       '@google/genai':
         specifier: 2.10.0
-        version: 2.10.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))
+        version: 2.10.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       google-auth-library:
         specifier: 10.9.0
         version: 10.9.0
@@ -1041,7 +1041,7 @@ importers:
     dependencies:
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -1088,7 +1088,7 @@ importers:
         version: 18.1.0
       openai:
         specifier: 6.45.0
-        version: 6.45.0(@aws-sdk/credential-provider-node@3.972.61)(@smithy/hash-node@4.4.5)(@smithy/signature-v4@5.6.1)(ws@8.21.0)(zod@4.4.3)
+        version: 6.45.0(@aws-sdk/credential-provider-node@3.972.61)(@smithy/hash-node@4.4.5)(@smithy/signature-v4@5.6.1)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod@4.4.3)
       typebox:
         specifier: 1.3.3
         version: 1.3.3
@@ -1129,7 +1129,7 @@ importers:
     dependencies:
       node-edge-tts:
         specifier: 1.2.10
-        version: 1.2.10
+        version: 1.2.10(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -1292,7 +1292,7 @@ importers:
     dependencies:
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -1396,7 +1396,7 @@ importers:
     devDependencies:
       '@openclaw/crabline':
         specifier: 0.1.9
-        version: 0.1.9
+        version: 0.1.9(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@openclaw/discord':
         specifier: workspace:*
         version: link:../discord
@@ -1448,7 +1448,7 @@ importers:
         version: 3.7.1
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -1510,7 +1510,7 @@ importers:
     dependencies:
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -1520,7 +1520,7 @@ importers:
     dependencies:
       '@slack/bolt':
         specifier: 4.7.3
-        version: 4.7.3(@types/express@5.0.6)
+        version: 4.7.3(@types/express@5.0.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@slack/types':
         specifier: 2.21.1
         version: 2.21.1
@@ -1532,7 +1532,7 @@ importers:
         version: 1.3.3
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -1608,6 +1608,19 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
+  extensions/telegram-user:
+    dependencies:
+      telegram:
+        specifier: 2.26.22
+        version: 2.26.22
+      zod:
+        specifier: ^4.3.6
+        version: 4.4.3
+    devDependencies:
+      openclaw:
+        specifier: workspace:*
+        version: link:../..
+
   extensions/tencent:
     devDependencies:
       '@openclaw/plugin-sdk':
@@ -1674,7 +1687,7 @@ importers:
         version: 8.1.4
       '@twurple/chat':
         specifier: 8.1.4
-        version: 8.1.4(@twurple/auth@8.1.4)
+        version: 8.1.4(@twurple/auth@8.1.4)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -1717,7 +1730,7 @@ importers:
         version: 1.3.3
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -1777,7 +1790,7 @@ importers:
         version: 2.2.3
       baileys:
         specifier: 7.0.0-rc13
-        version: 7.0.0-rc13(audio-decode@2.2.3)
+        version: 7.0.0-rc13(audio-decode@2.2.3)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       typebox:
         specifier: 1.3.3
         version: 1.3.3
@@ -1813,7 +1826,7 @@ importers:
         version: link:../../packages/plugin-sdk
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
 
   extensions/xiaomi:
     devDependencies:
@@ -1847,7 +1860,7 @@ importers:
         version: 1.3.3
       zca-js:
         specifier: 2.1.2
-        version: 2.1.2
+        version: 2.1.2(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -1881,13 +1894,13 @@ importers:
         version: 0.109.1(zod@4.4.3)
       '@google/genai':
         specifier: 2.10.0
-        version: 2.10.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))
+        version: 2.10.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@mistralai/mistralai':
         specifier: 2.4.0
-        version: 2.4.0(@opentelemetry/api@1.9.1)
+        version: 2.4.0(@opentelemetry/api@1.9.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       openai:
         specifier: 6.45.0
-        version: 6.45.0(@aws-sdk/credential-provider-node@3.972.61)(@smithy/hash-node@4.4.5)(@smithy/signature-v4@5.6.1)(ws@8.21.0)(zod@4.4.3)
+        version: 6.45.0(@aws-sdk/credential-provider-node@3.972.61)(@smithy/hash-node@4.4.5)(@smithy/signature-v4@5.6.1)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod@4.4.3)
       partial-json:
         specifier: 0.1.7
         version: 0.1.7
@@ -1905,7 +1918,7 @@ importers:
         version: 2.4.0
       ws:
         specifier: 8.21.0
-        version: 8.21.0
+        version: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
 
   packages/gateway-protocol:
     dependencies:
@@ -2035,7 +2048,7 @@ importers:
         version: 14.1.2
       '@vitest/browser-playwright':
         specifier: 4.1.9
-        version: 4.1.9(playwright@1.61.1)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
+        version: 4.1.9(bufferutil@4.1.0)(playwright@1.61.1)(utf-8-validate@5.0.10)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
       jsdom:
         specifier: 29.1.1
         version: 29.1.1(@noble/hashes@2.0.1)
@@ -2435,6 +2448,9 @@ packages:
         optional: true
       shiki:
         optional: true
+
+  '@cryptography/aes@0.1.1':
+    resolution: {integrity: sha512-PcYz4FDGblO6tM2kSC+VzhhK62vml6k6/YAkiWtyPvrgJVfnDRoHGDtKn5UiaRRUrvUTTocBpvc2rRgTCqxjsg==}
 
   '@csstools/color-helpers@6.1.0':
     resolution: {integrity: sha512-064IFJdjTfUqnjpCVpMOdbr8FLQBhinbZj6yRv2An2E41O/pLEXqfFRWqGq/SxlE5PEUYTlvWsG2r8MswAVvkg==}
@@ -4622,6 +4638,9 @@ packages:
     resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
 
+  async-mutex@0.3.2:
+    resolution: {integrity: sha512-HuTK7E7MT7jZEh1P9GtRW9+aTWiDWWi9InbZ5hjxrnRa39KS4BW04+xLBhYNS2aXhHUIKZSw3gj4Pn1pj+qGAA==}
+
   async-mutex@0.5.0:
     resolution: {integrity: sha512-1A94B18jkJ3DYq284ohPxoXbfTA5HsQ7/Mf4DEhcyLx3Bz27Rh59iScbB6EPiP+B+joue6YCxcMXSbFC1tZKwA==}
 
@@ -4640,6 +4659,7 @@ packages:
 
   audio-decode@2.2.3:
     resolution: {integrity: sha512-Z0lHvMayR/Pad9+O9ddzaBJE0DrhZkQlStrC1RwcAHF3AhQAsdwKHeLGK8fYKyp2DDU6xHxzGb4CLMui12yVrg==}
+    deprecated: Renamed to @audio/decode — same API; this name remains a thin alias. npm i @audio/decode
 
   audio-type@2.4.1:
     resolution: {integrity: sha512-dK9Z/P83C/rBfTrXXgPD3jZ+aXxx2o/P4rq8+H1JqxbXklitEeJw4CrcwMC5CkON3CX3yy2gaWnIEVYejYh0zQ==}
@@ -4738,6 +4758,10 @@ packages:
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
 
+  big-integer@1.6.52:
+    resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
+    engines: {node: '>=0.6'}
+
   bignumber.js@9.3.1:
     resolution: {integrity: sha512-Ko0uX15oIUS7wJ3Rb30Fs6SkVbLmPBAKdlm7q9+ak9bbIeFf0MwuBsQV6z7+X768/cHsfg+WlysDWJcmthjsjQ==}
 
@@ -4780,6 +4804,13 @@ packages:
 
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
+
+  buffer@6.0.3:
+    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
+
+  bufferutil@4.1.0:
+    resolution: {integrity: sha512-ZMANVnAixE6AWWnPzlW2KpUrxhm9woycYvPOo67jWHyFowASTEd9s+QN1EIMsSDtwhIxN4sWE1jotpuDUIgyIw==}
+    engines: {node: '>=6.14.2'}
 
   bundle-name@4.1.0:
     resolution: {integrity: sha512-tjwM5exMg6BGRI+kNmTntNsvdZS1X8BFYS6tnJ2hdH0kVxM6/eVZ2xy+FqStSWvYmtfFMDLIxurorHwDKfDz5Q==}
@@ -4984,6 +5015,7 @@ packages:
 
   crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
 
   css-select@5.2.2:
     resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
@@ -5002,6 +5034,10 @@ packages:
   curve25519-js@0.0.4:
     resolution: {integrity: sha512-axn2UMEnkhyDUPWOwVKBMVIzSQy2ejH2xRGy1wq81dqRwApXfIzfbE3hIX0ZRFBIihf/KDqK158DLwESu4AK1w==}
 
+  d@1.0.2:
+    resolution: {integrity: sha512-MOqHvMWF9/9MX6nza0KgvFH4HpMU0EF5uUDXqX/BtxtU8NfB0QzRtJ8Oe/6SuS4kbhyzVJwjd97EA4PKrzJ8bw==}
+    engines: {node: '>=0.12'}
+
   data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
     engines: {node: '>= 12'}
@@ -5012,6 +5048,14 @@ packages:
 
   date-fns@4.4.0:
     resolution: {integrity: sha512-+1UMbeh68lH1SegH83CGWwpb6OHHbpSgr3+s5Eww5M4CAgswBpoWS0AjTOfEJ33HiYKz1hdj/KTFprzXHmq/6w==}
+
+  debug@2.6.9:
+    resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -5083,11 +5127,18 @@ packages:
   doctypes@1.1.0:
     resolution: {integrity: sha512-LLBi6pEqS6Do3EKQ3J0NqHWV5hhb78Pi8vvESYwyOy2c31ZEZVdtitdzsQsKb7878PEERhzUk0ftqGhG6Mz+pQ==}
 
+  dom-serializer@1.4.1:
+    resolution: {integrity: sha512-VHwB3KfrcOOkelEG2ZOfxqLZdfkil8PtJi4P8N2MMXucZq2yLp75ClViUlOVwyoHEDjYU433Aq+5zWP61+RGag==}
+
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
 
   domelementtype@2.3.0:
     resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
+
+  domhandler@4.3.1:
+    resolution: {integrity: sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ==}
+    engines: {node: '>= 4'}
 
   domhandler@5.0.3:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
@@ -5095,6 +5146,9 @@ packages:
 
   dompurify@3.4.11:
     resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+
+  domutils@2.8.0:
+    resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -5139,6 +5193,9 @@ packages:
   end-of-stream@1.4.5:
     resolution: {integrity: sha512-ooEGc6HP26xXq/N+GCGOT0JKCLDGrq2bQUZrQ7gyrJiZANJ/8YDTxTpQBXGMn+WbIQXNVpyWymm7KYVICQnyOg==}
 
+  entities@2.2.0:
+    resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
+
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
     engines: {node: '>=0.12'}
@@ -5174,6 +5231,17 @@ packages:
     resolution: {integrity: sha512-j6vWzfrGVfyXxge+O0x5sh6cvxAog0a/4Rdd2K36zCMV5eJ+/+tOAngRO8cODMNWbVRdVlmGZQL2YS3yR8bIUA==}
     engines: {node: '>= 0.4'}
 
+  es5-ext@0.10.64:
+    resolution: {integrity: sha512-p2snDhiLaXe6dahss1LddxqEm+SkuDvV8dnIQG0MWjyHpcMNfXKPE+/Cc0y+PhxJX3A4xGNeFCj5oc0BUh6deg==}
+    engines: {node: '>=0.10'}
+
+  es6-iterator@2.0.3:
+    resolution: {integrity: sha512-zw4SRzoUkd+cl+ZoE15A9o1oQd920Bb0iOJMQkQhl3jNc03YqVjAhG7scf9C5KWRU/R13Orf588uCC6525o02g==}
+
+  es6-symbol@3.1.4:
+    resolution: {integrity: sha512-U9bFFjX8tFiATgtkJ1zg25+KviIXpgRvRHS8sau3GfhVzThRQrOeksPeT0BWW2MNZs1OEWJ1DPXOQMn0KKRkvg==}
+    engines: {node: '>=0.12'}
+
   esast-util-from-estree@2.0.0:
     resolution: {integrity: sha512-4CyanoAudUSBAn5K13H4JhsMH6L9ZP7XbLVe/dKybkxMO7eDyLsT8UHl9TRNrU2Gr9nz+FovfSIjuXWJ81uVwQ==}
 
@@ -5191,6 +5259,10 @@ packages:
 
   escape-html@1.0.3:
     resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
+
+  esniff@2.0.1:
+    resolution: {integrity: sha512-kTUIGKQ/mDPFoJ0oVfcmyJn4iBDRptjNVIzwIFR7tqWXdVI9xfA2RMwY/gbSpJG3lkdWNEjLap/NqVHZiJsdfg==}
+    engines: {node: '>=0.10'}
 
   estree-util-attach-comments@3.0.0:
     resolution: {integrity: sha512-cKUwm/HUcTDsYh/9FgnuFqpfquUbwIqwKM26BVCGDPVgvaCl/nDCCjUfiLlx6lsEZ3Z4RFxNbOQ60pkaEwFxGw==}
@@ -5216,6 +5288,9 @@ packages:
   etag@1.8.1:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
+
+  event-emitter@0.3.5:
+    resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
 
   event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
@@ -5259,6 +5334,9 @@ packages:
   express@5.2.1:
     resolution: {integrity: sha512-hIS4idWWai69NezIdRt2xFVofaF4j+6INOpJlVOLDO8zXGpUVEVzIYk12UUi2JzjEzWL3IOAxcTubgz9Po0yXw==}
     engines: {node: '>= 18'}
+
+  ext@1.7.0:
+    resolution: {integrity: sha512-6hxeJYaL110a9b5TEJSj0gojyHQAmA2ch5Os+ySCiA1QGdS697XWY1pzsrSjqA9LDEEgdB/KypIlR59RcLuHYw==}
 
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
@@ -5516,6 +5594,9 @@ packages:
   htmlparser2@10.1.0:
     resolution: {integrity: sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==}
 
+  htmlparser2@6.1.0:
+    resolution: {integrity: sha512-gyyPk6rgonLFEDGoeRgQNaEUvdJ4ktTmmUh/h2t7s+M8oPpIPxgNACWa+6ESR57kXstwqPiCut0V8NRpcwgU7A==}
+
   http-cache-semantics@4.2.0:
     resolution: {integrity: sha512-dTxcvPXqPvXBQpq5dUr6mEMJX4oIEFv6bwom3FDwKRDsuIjjJGANqhBuoAn9c1RQJIdAKav33ED65E2ys+87QQ==}
 
@@ -5560,6 +5641,10 @@ packages:
   import-without-cache@0.4.0:
     resolution: {integrity: sha512-NkJQA7oZ4YHQhd2+H3BoRFKF3d/XNsiKpHZCQEMH9pDX27hQQLsTyOocyRgaIVtf8gHX3Nt3LPkR4e5EdtPAGQ==}
     engines: {node: ^22.18.0 || >=24.0.0}
+
+  imurmurhash@0.1.4:
+    resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
+    engines: {node: '>=0.8.19'}
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -5670,6 +5755,9 @@ packages:
   is-stream@2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
+
+  is-typedarray@1.0.0:
+    resolution: {integrity: sha512-cyA56iCMHAh5CdzjJIa4aohJyeO1YbwLi3Jc35MmRU6poroFjIGZzUzupGiRPOjgHg9TLu43xbpwXk523fMxKA==}
 
   is-unicode-supported@2.1.0:
     resolution: {integrity: sha512-mE00Gnza5EEB3Ds0HfMyllZzbBrmLOX3vfWoj9A9PEnTfratQ/BcaJOuMhnkhjXvb2+FkY3VuHqtAGpTPmglFQ==}
@@ -6203,6 +6291,11 @@ packages:
     resolution: {integrity: sha512-Lbgzdk0h4juoQ9fCKXW4by0UJqj+nOOrI9MJ1sSj4nI8aI2eo1qmvQEie4VD1glsS250n15LsWsYtCugiStS5A==}
     engines: {node: '>=18'}
 
+  mime@3.0.0:
+    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+
   mimic-fn@2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
     engines: {node: '>=6'}
@@ -6263,6 +6356,9 @@ packages:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
     engines: {node: '>=10'}
 
+  ms@2.0.0:
+    resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
+
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
@@ -6283,6 +6379,9 @@ packages:
   negotiator@1.0.0:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
+
+  next-tick@1.1.0:
+    resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
 
   node-addon-api@8.9.0:
     resolution: {integrity: sha512-ekZMeaaIzSQTSpr7X2X3iJM7lTzgnx8ahAG9pJfT/7+14mlEM8ZYQ9cgCDvSSRbReFK0oHli3WrZdCiRsgAT9Q==}
@@ -6326,6 +6425,10 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  node-localstorage@2.2.1:
+    resolution: {integrity: sha512-vv8fJuOUCCvSPjDjBLlMqYMHob4aGjkmrkaE42/mZr0VT+ZAU10jRF8oTnX9+pgU9/vYJ8P7YT3Vd6ajkmzSCw==}
+    engines: {node: '>=0.12'}
 
   node-sarif-builder@3.4.0:
     resolution: {integrity: sha512-tGnJW6OKRii9u/b2WiUViTJS+h7Apxx17qsMUjsUeNDiMMX5ZFf8F8Fcz7PAQ6omvOxHZtvDTmOYKJQwmfpjeg==}
@@ -6529,6 +6632,9 @@ packages:
 
   partial-json@0.1.7:
     resolution: {integrity: sha512-Njv/59hHaokb/hRUjce3Hdv12wd60MtM9Z5Olmn+nehe0QDAsRtRbJPvJ0Z91TusF0SuZRIvnM+S4l6EIP8leA==}
+
+  path-browserify@1.0.1:
+    resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
 
   path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
@@ -6774,6 +6880,9 @@ packages:
   readdirp@5.0.0:
     resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
     engines: {node: '>= 20.19.0'}
+
+  real-cancellable-promise@1.2.3:
+    resolution: {integrity: sha512-hBI5Gy/55VEeeMtImMgEirD7eq5UmqJf1J8dFZtbJZA/3rB0pYFZ7PayMGueb6v4UtUtpKpP+05L0VwyE1hI9Q==}
 
   real-require@0.2.0:
     resolution: {integrity: sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==}
@@ -7027,6 +7136,9 @@ packages:
     resolution: {integrity: sha512-stxByr12oeeOyY2BlviTNQlYV5xOj47GirPr4yA1hE9JCtxfQN0+tVbkxwCtYDQWhEKWFHsEK48ORg5jrouCAg==}
     engines: {node: '>=20'}
 
+  slide@1.1.6:
+    resolution: {integrity: sha512-NwrtjCg+lZoqhFU8fOwl4ay2ei8PaqCBOUV3/ektPY9trO1yQ1oXEfmHAhKArUVUr/hOHvy5f6AdP17dCM0zMw==}
+
   smart-buffer@4.2.0:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
@@ -7124,6 +7236,9 @@ packages:
     resolution: {integrity: sha512-yhPIQXjrlt1xv7dyPQg2P17URmXbuM5pdGkpiMB3RenprfiBlvK415Lctfe0eshk90oA7/tNq7WEiMK8RSP39A==}
     engines: {node: '>=18'}
 
+  store2@2.14.4:
+    resolution: {integrity: sha512-srTItn1GOvyvOycgxjAnPA63FZNwy0PTyUBFMHRM+hVFltAeoh0LmNBz9SZqUS9mMqGk8rfyWyXn3GH5ReJ8Zw==}
+
   streamx@2.28.0:
     resolution: {integrity: sha512-1Yowhzjf0ivGMrTIkY9hav5TxobO9qIVqUE41fiCGMGgc3CLlf4MY+9AHmZqBWgDTue0fY9zWjYFVyf6Diuobw==}
 
@@ -7195,6 +7310,9 @@ packages:
 
   teex@1.0.1:
     resolution: {integrity: sha512-eYE6iEI62Ni1H8oIa7KlDU6uQBtqr4Eajni3wX7rpfXD8ysFx8z0+dri+KWEPWpBsxXfxu58x/0jvTVT1ekOSg==}
+
+  telegram@2.26.22:
+    resolution: {integrity: sha512-EIj7Yrjiu0Yosa3FZ/7EyPg9s6UiTi/zDQrFmR/2Mg7pIUU+XjAit1n1u9OU9h2oRnRM5M+67/fxzQluZpaJJg==}
 
   text-decoder@1.2.7:
     resolution: {integrity: sha512-vlLytXkeP4xvEq2otHeJfSQIRyWxo/oZGEbXrtEEF9Hnmrdly59sUbzZ/QgyWuLYHctCHxFF4tRQZNQ9k60ExQ==}
@@ -7277,6 +7395,10 @@ packages:
   ts-algebra@2.0.0:
     resolution: {integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==}
 
+  ts-custom-error@3.3.1:
+    resolution: {integrity: sha512-5OX1tzOjxWEgsr/YEUWSuPrQ00deKLh6D7OTWcvNHm12/7QPyRh8SYpyWvA4IZv8H/+GQWQEh/kwo95Q9OVW1A==}
+    engines: {node: '>=14.0.0'}
+
   tsdown@0.22.1:
     resolution: {integrity: sha512-Ldx1jLyDFEzsN/fMBi2TBVaZe4fuEJhIiHjQhX0pV7oa5uYz5Imdivs5mNzEXOrMEtFRR6C9BQ2YqLoroffB+Q==}
     engines: {node: ^22.18.0 || >=24.0.0}
@@ -7335,8 +7457,14 @@ packages:
     resolution: {integrity: sha512-faYHw0anBbc/kWF3zFTEnxSFOAGUX9GFbOBthvDdLsIlEoWOFOtS0zgCiQYwIskL9iGXZL3kAXD8OoZ4GmMATA==}
     engines: {node: '>= 18'}
 
+  type@2.7.3:
+    resolution: {integrity: sha512-8j+1QmAbPvLZow5Qpi6NCaN8FB60p/6x8/vfNqOk/hC+HuvFZhL4+WfekuhQLiqFZXOgQdrs3B+XxEmCc6b3FQ==}
+
   typebox@1.3.3:
     resolution: {integrity: sha512-URXGUE31PJDQC+PtRMJeLdF4kmmOdFoVPikPCtV2oOIhUpNpppEdIz7W8bH8cFYPYHdDpaRvqwdegMTmHliudg==}
+
+  typedarray-to-buffer@3.1.5:
+    resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
 
   typescript@6.0.3:
     resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
@@ -7436,6 +7564,10 @@ packages:
 
   url-parse@1.5.10:
     resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
+
+  utf-8-validate@5.0.10:
+    resolution: {integrity: sha512-Z6czzLq4u8fPOyx7TU6X3dvUZVvoJmxSQ+IcrlmagKhilxlhZgxPK6C5Jqbkw1IDUmFTM+cz9QDnnLTwDz/2gQ==}
+    engines: {node: '>=6.14.2'}
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -7569,6 +7701,10 @@ packages:
     resolution: {integrity: sha512-BMhLD/Sw+GbJC21C/UgyaZX41nPt8bUTg+jWyDeg7e7YN4xOM05YPSIXceACnXVtqyEw/LMClUQMtMZ+PGGpqQ==}
     engines: {node: '>=20'}
 
+  websocket@1.0.35:
+    resolution: {integrity: sha512-/REy6amwPZl44DDzvRCkaI1q1bIiQB0mEFQLUrhz3z2EK91cp3n72rAjUlrTP0zV22HJIUOVHQGPxhFRjxjt+Q==}
+    engines: {node: '>=4.0.0'}
+
   whatsapp-rust-bridge@0.5.4:
     resolution: {integrity: sha512-yYO1qSs0Fe7tGtnxOFHomocUD6IZtoAgmA4oDFyGIRZ67D3QZk3w7swA6XXFXNQngiyrg2k7tul6IrM3eUFh7A==}
 
@@ -7623,6 +7759,9 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
+  write-file-atomic@1.3.4:
+    resolution: {integrity: sha512-SdrHoC/yVBPpV0Xq/mUZQIpW2sWXAShb/V4pomcJXh92RuaO+f3UTWItiR3Px+pLnV2PvC2/bfn5cwr5X6Vfxw==}
+
   ws@8.21.0:
     resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
     engines: {node: '>=10.0.0'}
@@ -7652,6 +7791,11 @@ packages:
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
     engines: {node: '>=10'}
+
+  yaeti@0.0.6:
+    resolution: {integrity: sha512-MvQa//+KcZCUkBTIC9blM+CU9J2GzuTytsOUwf2lidtvkx/6gnEp1QvJv34t9vdjhFmha/mUiNDbN0D0mJWdug==}
+    engines: {node: '>=0.10.32'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
@@ -8278,6 +8422,8 @@ snapshots:
     optionalDependencies:
       shiki: 4.3.0
 
+  '@cryptography/aes@0.1.1': {}
+
   '@csstools/color-helpers@6.1.0': {}
 
   '@csstools/css-calc@3.2.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
@@ -8307,16 +8453,16 @@ snapshots:
       '@d-fischer/shared-utils': 3.6.4
       tslib: 2.8.1
 
-  '@d-fischer/connection@10.0.1':
+  '@d-fischer/connection@10.0.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@d-fischer/isomorphic-ws': 7.0.2(ws@8.21.0)
+      '@d-fischer/isomorphic-ws': 7.0.2(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
       '@d-fischer/logger': 4.2.4
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
       '@types/node': 20.19.43
       '@types/ws': 8.18.1
       tslib: 2.8.1
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -8327,9 +8473,9 @@ snapshots:
 
   '@d-fischer/escape-string-regexp@5.0.0': {}
 
-  '@d-fischer/isomorphic-ws@7.0.2(ws@8.21.0)':
+  '@d-fischer/isomorphic-ws@7.0.2(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))':
     dependencies:
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
 
   '@d-fischer/logger@4.2.4':
     dependencies:
@@ -8351,14 +8497,14 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@discordjs/voice@0.19.2(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
+  '@discordjs/voice@0.19.2(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@snazzah/davey': 0.1.12(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
       '@types/ws': 8.18.1
       discord-api-types: 0.38.49
       prism-media: 1.3.5
       tslib: 2.8.1
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - '@discordjs/opus'
       - '@emnapi/core'
@@ -8519,12 +8665,12 @@ snapshots:
       '@github/copilot-win32-arm64': 1.0.68
       '@github/copilot-win32-x64': 1.0.68
 
-  '@google/genai@2.10.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))':
+  '@google/genai@2.10.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       google-auth-library: 10.9.0
       p-retry: 4.6.2
       protobufjs: 7.6.3
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
     transitivePeerDependencies:
@@ -8684,7 +8830,7 @@ snapshots:
       '@lancedb/lancedb-win32-arm64-msvc': 0.30.0
       '@lancedb/lancedb-win32-x64-msvc': 0.30.0
 
-  '@larksuiteoapi/node-sdk@1.68.0':
+  '@larksuiteoapi/node-sdk@1.68.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       axios: 1.16.0
       lodash.identity: 3.0.0
@@ -8692,7 +8838,7 @@ snapshots:
       lodash.pickby: 4.6.0
       protobufjs: 7.6.3
       qs: 6.15.2
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -8823,10 +8969,10 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@mistralai/mistralai@2.4.0(@opentelemetry/api@1.9.1)':
+  '@mistralai/mistralai@2.4.0(@opentelemetry/api@1.9.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@opentelemetry/semantic-conventions': 1.41.1
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod: 4.4.3
       zod-to-json-schema: 3.25.2(zod@4.4.3)
     optionalDependencies:
@@ -8975,12 +9121,12 @@ snapshots:
   '@openai/codex@0.144.3-win32-x64':
     optional: true
 
-  '@openclaw/crabline@0.1.9':
+  '@openclaw/crabline@0.1.9(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       commander: 15.0.0
       curve25519-js: 0.0.4
       picocolors: 1.1.1
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       yaml: 2.9.0
       zod: 4.4.3
     transitivePeerDependencies:
@@ -9617,11 +9763,11 @@ snapshots:
       '@simple-git/args-pathspec': 1.0.3
     optional: true
 
-  '@slack/bolt@4.7.3(@types/express@5.0.6)':
+  '@slack/bolt@4.7.3(@types/express@5.0.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@slack/logger': 4.0.1
       '@slack/oauth': 3.0.5
-      '@slack/socket-mode': 2.0.7
+      '@slack/socket-mode': 2.0.7(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@slack/types': 2.21.1
       '@slack/web-api': 7.18.0
       '@types/express': 5.0.6
@@ -9650,14 +9796,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@slack/socket-mode@2.0.7':
+  '@slack/socket-mode@2.0.7(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@slack/logger': 4.0.1
       '@slack/web-api': 7.18.0
       '@types/node': 26.1.0
       '@types/ws': 8.18.1
       eventemitter3: 5.0.4
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -9897,7 +10043,7 @@ snapshots:
       '@twurple/common': 8.1.4
       tslib: 2.8.1
 
-  '@twurple/chat@8.1.4(@twurple/auth@8.1.4)':
+  '@twurple/chat@8.1.4(@twurple/auth@8.1.4)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@d-fischer/cache-decorators': 4.0.1
       '@d-fischer/deprecate': 2.0.2
@@ -9907,7 +10053,7 @@ snapshots:
       '@d-fischer/typed-event-emitter': 3.3.3
       '@twurple/auth': 8.1.4
       '@twurple/common': 8.1.4
-      ircv3: 0.33.1
+      ircv3: 0.33.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       tslib: 2.8.1
     transitivePeerDependencies:
       - bufferutil
@@ -10089,9 +10235,9 @@ snapshots:
 
   '@urbit/aura@3.0.0': {}
 
-  '@vitest/browser-playwright@4.1.9(playwright@1.61.1)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)':
+  '@vitest/browser-playwright@4.1.9(bufferutil@4.1.0)(playwright@1.61.1)(utf-8-validate@5.0.10)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)':
     dependencies:
-      '@vitest/browser': 4.1.9(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/browser': 4.1.9(bufferutil@4.1.0)(utf-8-validate@5.0.10)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
       '@vitest/mocker': 4.1.9(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
       playwright: 1.61.1
       tinyrainbow: 3.1.0
@@ -10102,7 +10248,7 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/browser@4.1.9(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)':
+  '@vitest/browser@4.1.9(bufferutil@4.1.0)(utf-8-validate@5.0.10)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)':
     dependencies:
       '@blazediff/core': 1.9.1
       '@vitest/mocker': 4.1.9(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
@@ -10112,7 +10258,7 @@ snapshots:
       sirv: 3.0.2
       tinyrainbow: 3.1.0
       vitest: 4.1.9(@opentelemetry/api@1.9.1)(@types/node@26.1.0)(@vitest/browser-playwright@4.1.9)(@vitest/coverage-v8@4.1.9)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -10133,7 +10279,7 @@ snapshots:
       tinyrainbow: 3.1.0
       vitest: 4.1.9(@opentelemetry/api@1.9.1)(@types/node@26.1.0)(@vitest/browser-playwright@4.1.9)(@vitest/coverage-v8@4.1.9)(jsdom@29.1.1(@noble/hashes@2.0.1))(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
     optionalDependencies:
-      '@vitest/browser': 4.1.9(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/browser': 4.1.9(bufferutil@4.1.0)(utf-8-validate@5.0.10)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
 
   '@vitest/expect@4.1.9':
     dependencies:
@@ -10332,6 +10478,10 @@ snapshots:
 
   astring@1.9.0: {}
 
+  async-mutex@0.3.2:
+    dependencies:
+      tslib: 2.8.1
+
   async-mutex@0.5.0:
     dependencies:
       tslib: 2.8.1
@@ -10378,7 +10528,7 @@ snapshots:
 
   bail@2.0.2: {}
 
-  baileys@7.0.0-rc13(audio-decode@2.2.3):
+  baileys@7.0.0-rc13(audio-decode@2.2.3)(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     dependencies:
       '@cacheable/node-cache': 1.7.6
       '@hapi/boom': 9.1.4
@@ -10390,7 +10540,7 @@ snapshots:
       pino: 9.14.0
       protobufjs: 7.6.3
       whatsapp-rust-bridge: 0.5.4
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
       audio-decode: 2.2.3
     transitivePeerDependencies:
@@ -10441,6 +10591,8 @@ snapshots:
     dependencies:
       require-from-string: 2.0.2
 
+  big-integer@1.6.52: {}
+
   bignumber.js@9.3.1: {}
 
   birpc@4.0.0: {}
@@ -10487,6 +10639,15 @@ snapshots:
   buffer-equal-constant-time@1.0.1: {}
 
   buffer-from@1.1.2: {}
+
+  buffer@6.0.3:
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+
+  bufferutil@4.1.0:
+    dependencies:
+      node-gyp-build: 4.8.4
 
   bundle-name@4.1.0:
     dependencies:
@@ -10708,6 +10869,11 @@ snapshots:
 
   curve25519-js@0.0.4: {}
 
+  d@1.0.2:
+    dependencies:
+      es5-ext: 0.10.64
+      type: 2.7.3
+
   data-uri-to-buffer@4.0.1: {}
 
   data-urls@7.0.0(@noble/hashes@2.0.1):
@@ -10718,6 +10884,10 @@ snapshots:
       - '@noble/hashes'
 
   date-fns@4.4.0: {}
+
+  debug@2.6.9:
+    dependencies:
+      ms: 2.0.0
 
   debug@4.4.3:
     dependencies:
@@ -10765,6 +10935,12 @@ snapshots:
 
   doctypes@1.1.0: {}
 
+  dom-serializer@1.4.1:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 4.3.1
+      entities: 2.2.0
+
   dom-serializer@2.0.0:
     dependencies:
       domelementtype: 2.3.0
@@ -10773,6 +10949,10 @@ snapshots:
 
   domelementtype@2.3.0: {}
 
+  domhandler@4.3.1:
+    dependencies:
+      domelementtype: 2.3.0
+
   domhandler@5.0.3:
     dependencies:
       domelementtype: 2.3.0
@@ -10780,6 +10960,12 @@ snapshots:
   dompurify@3.4.11:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
+
+  domutils@2.8.0:
+    dependencies:
+      dom-serializer: 1.4.1
+      domelementtype: 2.3.0
+      domhandler: 4.3.1
 
   domutils@3.2.2:
     dependencies:
@@ -10816,6 +11002,8 @@ snapshots:
     dependencies:
       once: 1.4.0
 
+  entities@2.2.0: {}
+
   entities@4.5.0: {}
 
   entities@7.0.1: {}
@@ -10841,6 +11029,24 @@ snapshots:
       get-intrinsic: 1.3.0
       has-tostringtag: 1.0.2
       hasown: 2.0.4
+
+  es5-ext@0.10.64:
+    dependencies:
+      es6-iterator: 2.0.3
+      es6-symbol: 3.1.4
+      esniff: 2.0.1
+      next-tick: 1.1.0
+
+  es6-iterator@2.0.3:
+    dependencies:
+      d: 1.0.2
+      es5-ext: 0.10.64
+      es6-symbol: 3.1.4
+
+  es6-symbol@3.1.4:
+    dependencies:
+      d: 1.0.2
+      ext: 1.7.0
 
   esast-util-from-estree@2.0.0:
     dependencies:
@@ -10889,6 +11095,13 @@ snapshots:
 
   escape-html@1.0.3: {}
 
+  esniff@2.0.1:
+    dependencies:
+      d: 1.0.2
+      es5-ext: 0.10.64
+      event-emitter: 0.3.5
+      type: 2.7.3
+
   estree-util-attach-comments@3.0.0:
     dependencies:
       '@types/estree': 1.0.9
@@ -10923,6 +11136,11 @@ snapshots:
       '@types/estree': 1.0.9
 
   etag@1.8.1: {}
+
+  event-emitter@0.3.5:
+    dependencies:
+      d: 1.0.2
+      es5-ext: 0.10.64
 
   event-target-shim@5.0.1: {}
 
@@ -10995,6 +11213,10 @@ snapshots:
       vary: 1.1.2
     transitivePeerDependencies:
       - supports-color
+
+  ext@1.7.0:
+    dependencies:
+      type: 2.7.3
 
   extend@3.0.2: {}
 
@@ -11312,6 +11534,13 @@ snapshots:
       domutils: 3.2.2
       entities: 7.0.1
 
+  htmlparser2@6.1.0:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 4.3.1
+      domutils: 2.8.0
+      entities: 2.2.0
+
   http-cache-semantics@4.2.0: {}
 
   http-errors@2.0.1:
@@ -11359,6 +11588,8 @@ snapshots:
 
   import-without-cache@0.4.0: {}
 
+  imurmurhash@0.1.4: {}
+
   inherits@2.0.4: {}
 
   ini@1.3.8:
@@ -11397,9 +11628,9 @@ snapshots:
       '@reflink/reflink': 0.1.19
     optional: true
 
-  ircv3@0.33.1:
+  ircv3@0.33.1(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     dependencies:
-      '@d-fischer/connection': 10.0.1
+      '@d-fischer/connection': 10.0.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@d-fischer/escape-string-regexp': 5.0.0
       '@d-fischer/logger': 4.2.4
       '@d-fischer/shared-utils': 3.6.4
@@ -11474,6 +11705,8 @@ snapshots:
       hasown: 2.0.4
 
   is-stream@2.0.1: {}
+
+  is-typedarray@1.0.0: {}
 
   is-unicode-supported@2.1.0:
     optional: true
@@ -12214,6 +12447,8 @@ snapshots:
     dependencies:
       mime-db: 1.54.0
 
+  mime@3.0.0: {}
+
   mimic-fn@2.1.0: {}
 
   mimic-function@5.0.1:
@@ -12269,6 +12504,8 @@ snapshots:
 
   mrmime@2.0.1: {}
 
+  ms@2.0.0: {}
+
   ms@2.1.3: {}
 
   music-metadata@11.13.0:
@@ -12293,6 +12530,8 @@ snapshots:
 
   negotiator@1.0.0: {}
 
+  next-tick@1.1.0: {}
+
   node-addon-api@8.9.0: {}
 
   node-api-headers@1.9.0:
@@ -12300,10 +12539,10 @@ snapshots:
 
   node-downloader-helper@2.1.11: {}
 
-  node-edge-tts@1.2.10:
+  node-edge-tts@1.2.10(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     dependencies:
       https-proxy-agent: 7.0.6
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       yargs: 17.7.3
     transitivePeerDependencies:
       - bufferutil
@@ -12371,6 +12610,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
     optional: true
+
+  node-localstorage@2.2.1:
+    dependencies:
+      write-file-atomic: 1.3.4
 
   node-sarif-builder@3.4.0:
     dependencies:
@@ -12452,12 +12695,12 @@ snapshots:
       is-inside-container: 1.0.0
       wsl-utils: 0.1.0
 
-  openai@6.45.0(@aws-sdk/credential-provider-node@3.972.61)(@smithy/hash-node@4.4.5)(@smithy/signature-v4@5.6.1)(ws@8.21.0)(zod@4.4.3):
+  openai@6.45.0(@aws-sdk/credential-provider-node@3.972.61)(@smithy/hash-node@4.4.5)(@smithy/signature-v4@5.6.1)(ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod@4.4.3):
     optionalDependencies:
       '@aws-sdk/credential-provider-node': 3.972.61
       '@smithy/hash-node': 4.4.5
       '@smithy/signature-v4': 5.6.1
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       zod: 4.4.3
 
   opus-decoder@0.7.11:
@@ -12598,6 +12841,8 @@ snapshots:
   parseurl@1.3.3: {}
 
   partial-json@0.1.7: {}
+
+  path-browserify@1.0.1: {}
 
   path-exists@4.0.0: {}
 
@@ -12864,6 +13109,8 @@ snapshots:
       util-deprecate: 1.0.2
 
   readdirp@5.0.0: {}
+
+  real-cancellable-promise@1.2.3: {}
 
   real-require@0.2.0: {}
 
@@ -13197,6 +13444,8 @@ snapshots:
       is-fullwidth-code-point: 5.1.0
     optional: true
 
+  slide@1.1.6: {}
+
   smart-buffer@4.2.0: {}
 
   socks-proxy-agent@8.0.5:
@@ -13285,6 +13534,8 @@ snapshots:
 
   steno@4.0.2:
     optional: true
+
+  store2@2.14.4: {}
 
   streamx@2.28.0:
     dependencies:
@@ -13388,6 +13639,28 @@ snapshots:
       - bare-abort-controller
       - react-native-b4a
 
+  telegram@2.26.22:
+    dependencies:
+      '@cryptography/aes': 0.1.1
+      async-mutex: 0.3.2
+      big-integer: 1.6.52
+      buffer: 6.0.3
+      htmlparser2: 6.1.0
+      mime: 3.0.0
+      node-localstorage: 2.2.1
+      pako: 2.2.0
+      path-browserify: 1.0.1
+      real-cancellable-promise: 1.2.3
+      socks: 2.8.9
+      store2: 2.14.4
+      ts-custom-error: 3.3.1
+      websocket: 1.0.35
+    optionalDependencies:
+      bufferutil: 4.1.0
+      utf-8-validate: 5.0.10
+    transitivePeerDependencies:
+      - supports-color
+
   text-decoder@1.2.7:
     dependencies:
       b4a: 1.8.1
@@ -13455,6 +13728,8 @@ snapshots:
 
   ts-algebra@2.0.0: {}
 
+  ts-custom-error@3.3.1: {}
+
   tsdown@0.22.1(@typescript/native-preview@7.0.0-dev.20260704.1)(tsx@4.22.4)(typescript@6.0.3)(unrun@0.3.1):
     dependencies:
       ansis: 4.3.1
@@ -13508,7 +13783,13 @@ snapshots:
       media-typer: 1.1.0
       mime-types: 3.0.2
 
+  type@2.7.3: {}
+
   typebox@1.3.3: {}
+
+  typedarray-to-buffer@3.1.5:
+    dependencies:
+      is-typedarray: 1.0.0
 
   typescript@6.0.3: {}
 
@@ -13596,6 +13877,10 @@ snapshots:
       querystringify: 2.2.0
       requires-port: 1.0.0
 
+  utf-8-validate@5.0.10:
+    dependencies:
+      node-gyp-build: 4.8.4
+
   util-deprecate@1.0.2: {}
 
   validate-npm-package-name@7.0.2:
@@ -13653,7 +13938,7 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
       '@types/node': 26.1.0
-      '@vitest/browser-playwright': 4.1.9(playwright@1.61.1)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
+      '@vitest/browser-playwright': 4.1.9(bufferutil@4.1.0)(playwright@1.61.1)(utf-8-validate@5.0.10)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))(vitest@4.1.9)
       '@vitest/coverage-v8': 4.1.9(@vitest/browser@4.1.9)(vitest@4.1.9)
       jsdom: 29.1.1(@noble/hashes@2.0.1)
     transitivePeerDependencies:
@@ -13684,6 +13969,17 @@ snapshots:
   webidl-conversions@3.0.1: {}
 
   webidl-conversions@8.0.1: {}
+
+  websocket@1.0.35:
+    dependencies:
+      bufferutil: 4.1.0
+      debug: 2.6.9
+      es5-ext: 0.10.64
+      typedarray-to-buffer: 3.1.5
+      utf-8-validate: 5.0.10
+      yaeti: 0.0.6
+    transitivePeerDependencies:
+      - supports-color
 
   whatsapp-rust-bridge@0.5.4: {}
 
@@ -13743,7 +14039,16 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  ws@8.21.0: {}
+  write-file-atomic@1.3.4:
+    dependencies:
+      graceful-fs: 4.2.11
+      imurmurhash: 0.1.4
+      slide: 1.1.6
+
+  ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10):
+    optionalDependencies:
+      bufferutil: 4.1.0
+      utf-8-validate: 5.0.10
 
   wsl-utils@0.1.0:
     dependencies:
@@ -13756,6 +14061,8 @@ snapshots:
   y18n@4.0.3: {}
 
   y18n@5.0.8: {}
+
+  yaeti@0.0.6: {}
 
   yallist@4.0.0: {}
 
@@ -13797,7 +14104,7 @@ snapshots:
   yoctocolors@2.1.2:
     optional: true
 
-  zca-js@2.1.2:
+  zca-js@2.1.2(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     dependencies:
       crypto-js: 4.2.0
       form-data: 2.5.6
@@ -13806,7 +14113,7 @@ snapshots:
       semver: 7.8.5
       spark-md5: 3.0.2
       tough-cookie: 4.1.3
-      ws: 8.21.0
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
