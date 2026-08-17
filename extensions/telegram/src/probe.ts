@@ -30,7 +30,11 @@ export type TelegramProbe = BaseProbeResult & {
     allowsUsersToCreateTopics?: boolean | null;
   };
   botInfo?: TelegramBotInfo;
-  webhook?: { url?: string | null; hasCustomCert?: boolean | null };
+  webhook?: {
+    url?: string | null;
+    hasCustomCert?: boolean | null;
+    pendingUpdateCount?: number | null;
+  };
 };
 
 export type TelegramProbeOptions = {
@@ -243,12 +247,17 @@ export async function probeTelegram(
             ),
           ) as {
             ok?: boolean;
-            result?: { url?: string; has_custom_certificate?: boolean };
+            result?: {
+              url?: string;
+              has_custom_certificate?: boolean;
+              pending_update_count?: number;
+            };
           };
           if (webhookRes.ok && webhookJson?.ok) {
             result.webhook = {
               url: webhookJson.result?.url ?? null,
               hasCustomCert: webhookJson.result?.has_custom_certificate ?? null,
+              pendingUpdateCount: webhookJson.result?.pending_update_count ?? null,
             };
           }
         }

@@ -240,6 +240,31 @@ describe("probeTelegram retry logic", () => {
     expect(fetchMock.mock.calls.at(0)?.[0]).toBe("https://api.telegram.org/bottest-token/getMe");
   });
 
+  it("captures pending_update_count from getWebhookInfo", async () => {
+    const fetchMock = installFetchMock();
+    mockGetMeSuccess(fetchMock);
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        ok: true,
+        result: {
+          url: "",
+          has_custom_certificate: false,
+          pending_update_count: 42,
+        },
+      }),
+    });
+
+    const result = await probeTelegram(token, timeoutMs);
+
+    expect(result.ok).toBe(true);
+    expect(result.webhook).toEqual({
+      url: "",
+      hasCustomCert: false,
+      pendingUpdateCount: 42,
+    });
+  });
+
   it("uses resolver-scoped Telegram fetch with probe network options", async () => {
     const fetchMock = installFetchMock();
     mockGetMeSuccess(fetchMock);
