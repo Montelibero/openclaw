@@ -205,7 +205,7 @@ curl -fsS http://127.0.0.1:18789/healthz   # liveness
 curl -fsS http://127.0.0.1:18789/readyz     # readiness
 ```
 
-The image's built-in `HEALTHCHECK` pings `/healthz`; repeated failures mark the container `unhealthy` so orchestrators can restart or replace it.
+The image's built-in `HEALTHCHECK` pings `/readyz`; repeated failures mark the container `unhealthy` so orchestrators can restart or replace it when configured channels are unavailable.
 
 Authenticated deep health snapshot:
 
