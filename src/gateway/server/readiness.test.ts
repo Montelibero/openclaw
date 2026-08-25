@@ -289,6 +289,25 @@ describe("createReadinessChecker", () => {
     });
   });
 
+  it("reports crash-loop suppressed telegram polling channels as not ready", () => {
+    withReadinessClock(() => {
+      const { manager, readiness } = createReadinessHarness({
+        accounts: {
+          telegram: stoppedAccount({
+            restartPending: false,
+            lastError: "safe mode",
+          }),
+        },
+      });
+      vi.mocked(manager.getAutostartSuppression).mockReturnValue({
+        reason: "crash-loop-breaker",
+        message: "safe mode",
+      });
+
+      expect(readiness()).toEqual(failingSnapshot(["telegram"]));
+    });
+  });
+
   it("keeps restart-pending channels ready during reconnect backoff", () => {
     withReadinessClock(() => {
       const startedAt = Date.now() - FIVE_MIN_MS;
@@ -304,6 +323,24 @@ describe("createReadinessChecker", () => {
         },
       });
       expect(readiness()).toEqual(readySnapshot());
+    });
+  });
+
+  it("reports restart-pending telegram polling channels as not ready", () => {
+    withReadinessClock(() => {
+      const startedAt = Date.now() - FIVE_MIN_MS;
+      const { readiness } = createReadinessHarness({
+        accounts: {
+          telegram: managedAccount({
+            running: false,
+            restartPending: true,
+            reconnectAttempts: 3,
+            lastStartAt: startedAt - 30_000,
+            lastStopAt: Date.now() - 5_000,
+          }),
+        },
+      });
+      expect(readiness()).toEqual(failingSnapshot(["telegram"]));
     });
   });
 
@@ -328,6 +365,19 @@ describe("createReadinessChecker", () => {
         }),
       });
       expect(readiness()).toEqual(readySnapshot(THIRTY_ONE_MIN_MS));
+    });
+  });
+
+  it("reports stale telegram polling transport as not ready", () => {
+    withReadinessClock(() => {
+      const { readiness } = createLongRunningReadinessHarness({
+        telegram: managedAccount({
+          mode: "polling",
+          lastStartAt: Date.now() - THIRTY_ONE_MIN_MS,
+          lastTransportActivityAt: Date.now() - THIRTY_ONE_MIN_MS,
+        }),
+      });
+      expect(readiness()).toEqual(failingSnapshot(["telegram"], THIRTY_ONE_MIN_MS));
     });
   });
 
