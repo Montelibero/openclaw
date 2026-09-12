@@ -1,9 +1,10 @@
 import path from "node:path";
 import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
 import { resolvePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
 import { filesManagerConfigSchema, parseFilesManagerConfig } from "./src/config.js";
-import { createFilesServer, FILES_PATH } from "./src/server.js";
+import { FILES_PATH } from "./src/server.js";
 import { FilesUiSession, type MinimalSessionResponse } from "./src/session.js";
 
 function resolveDefaultAgentId(config: OpenClawConfig): string {
@@ -44,14 +45,18 @@ export default definePluginEntry({
   register(api) {
     const pluginConfig =
       api.pluginConfig ?? resolvePluginConfigObject(api.config, "files-manager") ?? {};
-    const session = new FilesUiSession();
-    const filesServer = createFilesServer({
-      root: resolveRoot({
-        config: api.config,
-        pluginConfig,
-        resolveAgentWorkspaceDir: api.runtime.agent.resolveAgentWorkspaceDir,
-      }),
+    const root = resolveRoot({
+      config: api.config,
+      pluginConfig,
+      resolveAgentWorkspaceDir: api.runtime.agent.resolveAgentWorkspaceDir,
     });
+    // CloudCmd binds Socket.IO engine state at construction; keep that runtime
+    // out of metadata-only registration and plugin registration tests.
+    const loadFilesServer = createLazyRuntimeModule(() =>
+      import("./src/server.js").then(({ createFilesServer }) => createFilesServer({ root })),
+    );
+    const session = new FilesUiSession();
+    const getFilesServer = async () => await loadFilesServer();
 
     api.registerGatewayMethod(
       "files-manager.controlUiSession",
@@ -67,20 +72,20 @@ export default definePluginEntry({
       // bearer auth cannot protect the iframe's initial navigation directly.
       auth: "plugin",
       match: "prefix",
-      handler: (request, response) => {
+      handler: async (request, response) => {
         if (!session.authorize(request, response as MinimalSessionResponse)) {
           return;
         }
-        filesServer.handleHttpRequest(request, response);
+        (await getFilesServer()).handleHttpRequest(request, response);
       },
-      handleUpgrade: (request, socket, head) => {
+      handleUpgrade: async (request, socket, head) => {
         // WebSockets do not expose the cookie exchange used above, but browsers
         // attach same-origin HttpOnly cookies to upgrade requests.
         if (!session.authorizeUpgrade(request, socket)) {
           socket.destroy();
           return true;
         }
-        return filesServer.handleUpgrade(request, socket, head);
+        return (await getFilesServer()).handleUpgrade(request, socket, head);
       },
     });
 
