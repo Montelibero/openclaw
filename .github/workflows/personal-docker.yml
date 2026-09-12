@@ -69,3 +69,4 @@ jobs:
           build-args: |
             BUILDKIT_INLINE_CACHE=1
             OPENCLAW_DOCKER_APT_PACKAGES=openssh-client build-essential cmake
+            OPENCLAW_EXTENSIONS=files-manager
