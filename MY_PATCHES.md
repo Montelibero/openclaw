@@ -38,6 +38,7 @@ for b in \
   feat/extension-telegram-user \
   feat/disable-cooldowns \
   feat/usage-default-tokens \
+  feat/files-manager \
   chore/my-patches \
   chore/personal-docker-amd64 \
   chore/pnpm-docker-build-approvals \
@@ -58,6 +59,7 @@ git merge --no-ff feat/telegram-dm-topic-sessions
 git merge --no-ff feat/extension-telegram-user
 git merge --no-ff feat/disable-cooldowns
 git merge --no-ff feat/usage-default-tokens
+git merge --no-ff feat/files-manager
 git merge --no-ff chore/my-patches
 git merge --no-ff chore/personal-docker-amd64
 git merge --no-ff chore/pnpm-docker-build-approvals
@@ -279,6 +281,7 @@ Source archive of older patches (from the previous fork `clawdbot`): see `~/Proj
 **Changes:**
 
 - `.github/workflows/personal-docker.yml` — **NEW** workflow. Триггер: push в `deploy` или ручной `workflow_dispatch`. Игнорирует `docs/**`, `*.md`, `.agents/**`, `skills/**`, `MY_PATCHES.md`. Билдит `linux/amd64` (без arm64), пушит в `ghcr.io/<owner>/openclaw:latest` (lowercased), GHA-кэш для buildx.
+- `.github/workflows/personal-docker.yml` — `OPENCLAW_EXTENSIONS=files-manager`, чтобы CloudCmd-зависимости вошли в image на build-этапе.
 
 **Не трогаем upstream:**
 
@@ -399,6 +402,41 @@ docker pull ghcr.io/montelibero/openclaw:latest
 - `src/auto-reply/thinking.shared.ts` — `resolveResponseUsageMode(raw)` дефолт меняется `"off"` → `"tokens"`. Затрагивает 3 callsite (agent-runner reply, /usage status command, TUI). `/usage off` по-прежнему работает для отключения.
 
 **Tests:** `pnpm test src/auto-reply/thinking.test.ts` — 36/36 ✓. `commands-session-usage.test.ts` 5/5 ✓. usage footer 2/2 ✓. tsgo:core ✓.
+
+---
+
+## feat/files-manager — Files web manager в Control UI
+
+**Status:** ready-to-deploy
+**Why:** нужен файловый менеджер в dashboard: browse/download/upload/archive. Плагин использует CloudCmd как готовый движок, но authentication и вкладка остаются OpenClaw-native.
+
+**Changes:**
+
+- `extensions/files-manager/` — bundled plugin. Регистрирует `/files`, CloudCmd middleware и Socket.IO upgrade; disables CloudCmd auth.
+- `extensions/files-manager/src/session.ts` — Gateway method `files-manager.controlUiSession` выдаёт one-time ticket; plugin exchange делает HttpOnly `SameSite=Strict` cookie для `/files`.
+- `ui/src/components/gateway-plugin-frame.ts` — generic Control UI iframe handoff для descriptors с `schema.auth = "gateway-session"`.
+- `packages/gateway-protocol`, `src/gateway/control-ui-plugin-tabs.ts`, `ui/src/api/gateway.ts` — additive `gatewaySession` flag в hello payload.
+- `docs/plugins/files-manager.md`, plugin inventory/reference — user-facing config и security notes.
+
+**Config:**
+
+```jsonc
+{
+  "gateway": { "controlUi": { "embedSandbox": "trusted" } },
+  "plugins": {
+    "entries": {
+      "files-manager": {
+        "enabled": true,
+        "config": { "root": "/data/workspace" },
+      },
+    },
+  },
+}
+```
+
+**Build:** Personal Docker CI передаёт `OPENCLAW_EXTENSIONS=files-manager`, поэтому зависимости запекаются в image; runtime install не нужен.
+
+**Verification:** `tsgo:extensions`, `tsgo:core`, targeted extension/core oxlint, plugin build-entry probe, `plugins:inventory:check`. Targeted Vitest и Personal Docker build — следующая proof gate перед prod push.
 
 ---
 
