@@ -436,7 +436,7 @@ docker pull ghcr.io/montelibero/openclaw:latest
 
 **Build:** Personal Docker CI передаёт `OPENCLAW_EXTENSIONS=files-manager`, поэтому зависимости запекаются в image; runtime install не нужен.
 
-**Verification:** `tsgo:extensions`, `tsgo:core`, targeted extension/core oxlint, plugin build-entry probe, `plugins:inventory:check`. Targeted Vitest и Personal Docker build — следующая proof gate перед prod push.
+**Verification:** `tsgo:extensions`, `tsgo:core`, targeted extension/core oxlint, plugin build-entry probe, `plugins:inventory:check`, targeted Vitest (`extension-misc`, 2 files / 4 tests ✓). Personal Docker build — final proof gate перед prod push.
 
 ---
 
