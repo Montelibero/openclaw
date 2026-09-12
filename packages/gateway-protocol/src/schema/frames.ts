@@ -117,6 +117,7 @@ export const HelloOkSchema = Type.Object(
             description: Type.Optional(Type.String()),
             icon: Type.Optional(Type.String()),
             path: Type.Optional(Type.String()),
+            gatewaySession: Type.Optional(Type.Boolean()),
             group: Type.Optional(Type.Union([Type.Literal("control"), Type.Literal("agent")])),
             order: Type.Optional(Type.Number()),
           },

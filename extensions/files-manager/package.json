@@ -1,0 +1,19 @@
+{
+  "name": "@openclaw/files-manager",
+  "version": "2026.7.1",
+  "private": true,
+  "description": "OpenClaw Files plugin",
+  "type": "module",
+  "dependencies": {
+    "cloudcmd": "19.20.5",
+    "socket.io": "4.8.1"
+  },
+  "devDependencies": {
+    "@openclaw/plugin-sdk": "workspace:*"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

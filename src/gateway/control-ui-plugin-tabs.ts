@@ -11,6 +11,7 @@ export type ControlUiPluginTab = {
   description?: string;
   icon?: string;
   path?: string;
+  gatewaySession?: boolean;
   group?: "control" | "agent";
   order?: number;
 };
@@ -34,6 +35,12 @@ export function projectControlUiPluginTabs(
     const visible = (descriptor.requiredScopes ?? []).every(
       (scope) => authorizeOperatorScopesForRequiredScope(scope, scopes).allowed,
     );
+    const descriptorSchema = descriptor.schema;
+    const gatewaySession =
+      typeof descriptorSchema === "object" &&
+      descriptorSchema !== null &&
+      "auth" in descriptorSchema &&
+      descriptorSchema.auth === "gateway-session";
     if (!visible) {
       continue;
     }
@@ -44,6 +51,7 @@ export function projectControlUiPluginTabs(
       description: descriptor.description,
       icon: descriptor.icon,
       path: descriptor.path,
+      ...(gatewaySession ? { gatewaySession: true } : {}),
       group: descriptor.group,
       order: descriptor.order,
     });
