@@ -63,4 +63,26 @@ describe("projectControlUiPluginTabs", () => {
     );
     expect(tabs.map((tab) => tab.id)).toEqual(["beta", "zed", "alpha"]);
   });
+
+  it("projects the optional gateway-session embed flag", () => {
+    const tabs = projectControlUiPluginTabs(
+      [
+        {
+          pluginId: "files",
+          descriptor: tabDescriptor({
+            id: "files",
+            path: "/files",
+            schema: { auth: "gateway-session" },
+          }),
+        },
+        {
+          pluginId: "plain",
+          descriptor: tabDescriptor({ id: "plain", path: "/plain" }),
+        },
+      ],
+      ["operator.admin"],
+    );
+    expect(tabs.find((tab) => tab.id === "files")?.gatewaySession).toBe(true);
+    expect(tabs.find((tab) => tab.id === "plain")).not.toHaveProperty("gatewaySession");
+  });
 });

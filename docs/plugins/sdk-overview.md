@@ -239,6 +239,11 @@ api.session.controls.registerControlUiDescriptor({
 });
 ```
 
+For a plugin route that cannot authenticate an iframe navigation directly, set
+`schema: { auth: "gateway-session" }` and register the optional
+`<pluginId>.controlUiSession` Gateway method. The dashboard calls that method,
+then opens the returned one-time-session path instead of the raw descriptor path.
+
 Use the grouped namespaces for new plugin code:
 
 - `api.session.state.registerSessionExtension(...)`

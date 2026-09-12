@@ -10,6 +10,12 @@
           - "extensions/file-transfer/**"
           - "docs/nodes/index.md"
           - "docs/plugins/sdk-runtime.md"
+"plugin: files-manager":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "extensions/files-manager/**"
+          - "docs/plugins/files-manager.md"
+          - "docs/plugins/reference/files-manager.md"
 "plugin: pixverse":
   - changed-files:
       - any-glob-to-any-file:
