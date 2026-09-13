@@ -125,7 +125,7 @@ export class PluginPage extends LitElement {
             class="plugin-tab-embed__frame"
             src=${info.path}
             title=${info.label}
-            sandbox=${resolveEmbedSandbox(context.config.current.embedSandboxMode)}
+            .sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
           ></iframe>
         </section>
       `;
@@ -139,7 +139,7 @@ export class PluginPage extends LitElement {
           .path=${info.path}
           .label=${info.label}
           .connected=${snapshot.connected}
-          .sandbox=${resolveEmbedSandbox(context.config.current.embedSandboxMode)}
+          .sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
         ></openclaw-gateway-plugin-frame>
       `;
     }
