@@ -50,8 +50,8 @@ export default definePluginEntry({
       pluginConfig,
       resolveAgentWorkspaceDir: api.runtime.agent.resolveAgentWorkspaceDir,
     });
-    // CloudCmd binds Socket.IO engine state at construction; keep that runtime
-    // out of metadata-only registration and plugin registration tests.
+    // Keep heavy runtime out of metadata-only registration and plugin
+    // registration tests.
     const loadFilesServer = createLazyRuntimeModule(() =>
       import("./src/server.js").then(({ createFilesServer }) => createFilesServer({ root })),
     );
@@ -77,15 +77,6 @@ export default definePluginEntry({
           return;
         }
         (await getFilesServer()).handleHttpRequest(request, response);
-      },
-      handleUpgrade: async (request, socket, head) => {
-        // WebSockets do not expose the cookie exchange used above, but browsers
-        // attach same-origin HttpOnly cookies to upgrade requests.
-        if (!session.authorizeUpgrade(request, socket)) {
-          socket.destroy();
-          return true;
-        }
-        return (await getFilesServer()).handleUpgrade(request, socket, head);
       },
     });
 

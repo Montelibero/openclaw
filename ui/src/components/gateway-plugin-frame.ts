@@ -38,7 +38,7 @@ export class GatewayPluginFrame extends LitElement {
   @property() path = "";
   @property() label = "";
   @property() connected = false;
-  @property() sandbox = "allow-scripts allow-same-origin allow-forms";
+  @property() sandbox = "allow-scripts allow-same-origin allow-forms allow-popups";
 
   @state() private framePath: string | null = null;
   @state() private pending = false;

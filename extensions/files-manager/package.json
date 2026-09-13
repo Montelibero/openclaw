@@ -4,10 +4,7 @@
   "private": true,
   "description": "OpenClaw Files plugin",
   "type": "module",
-  "dependencies": {
-    "cloudcmd": "19.20.5",
-    "socket.io": "4.8.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@openclaw/plugin-sdk": "workspace:*"
   },
