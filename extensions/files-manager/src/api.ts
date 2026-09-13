@@ -74,9 +74,9 @@ async function archivePaths(root: string, paths: string[], archiveName: string):
   const { promisify } = await import("node:util");
   const exec = promisify(execFile);
   const archiveId = randomBytes(8).toString("hex");
-  const archivePath = path.join(root, `.${archiveName}.${archiveId}.zip`);
-  const absolutePaths = paths.map((p) => safeResolve(root, p));
-  await exec("zip", ["-r", archivePath, ...absolutePaths], {
+  const archivePath = path.join(root, `.${archiveName}.${archiveId}.tar.gz`);
+  const relativePaths = paths.map((p) => path.relative(root, safeResolve(root, p)));
+  await exec("tar", ["-czf", archivePath, ...relativePaths], {
     cwd: root,
   });
   return archivePath;
@@ -151,10 +151,10 @@ export async function handleApi(
       };
       const archivePath = await archivePaths(ctx.root, body.paths, body.name || "archive");
       const stat = await fs.stat(archivePath);
-      response.setHeader("Content-Type", "application/zip");
+      response.setHeader("Content-Type", "application/gzip");
       response.setHeader(
         "Content-Disposition",
-        `attachment; filename="${body.name || "archive"}.zip"`,
+        `attachment; filename="${body.name || "archive"}.tar.gz"`,
       );
       response.setHeader("Content-Length", stat.size.toString());
       const stream = createReadStream(archivePath);

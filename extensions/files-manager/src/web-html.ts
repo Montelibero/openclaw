@@ -191,7 +191,7 @@ export const FILES_HTML = `<!DOCTYPE html>
       if (!res.ok) { toast('Ошибка архивирования: ' + res.status); return; }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
-      triggerDownloadInParent(url, 'archive.zip');
+      triggerDownloadInParent(url, 'archive.tar.gz');
       setTimeout(() => URL.revokeObjectURL(url), 30000);
     }
 
