@@ -91,7 +91,7 @@ describe("telegram session route", () => {
     expect(route?.from).toBe("telegram:@alice:topic:99");
   });
 
-  it('does not recover currentSessionKey threads for shared dmScope "main" DMs', async () => {
+  it('recovers currentSessionKey threads for shared dmScope "main" DM topics', async () => {
     const route = await telegramPlugin.messaging?.resolveOutboundSessionRoute?.({
       cfg: {},
       agentId: "main",
@@ -99,10 +99,10 @@ describe("telegram session route", () => {
       currentSessionKey: "agent:main:main:thread:12345:99",
     });
 
-    expect(route?.sessionKey).toBe("agent:main:main");
+    expect(route?.sessionKey).toBe("agent:main:main:thread:12345:99");
     expect(route?.baseSessionKey).toBe("agent:main:main");
-    expect(route?.threadId).toBeUndefined();
-    expect(route?.recipientSessionExact).toBe(true);
+    expect(route?.threadId).toBe(99);
+    expect(route?.from).toBe("telegram:12345:topic:99");
   });
 
   it("uses inbound named-account isolation for direct sessions", async () => {

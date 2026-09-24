@@ -594,8 +594,6 @@ function resolveTelegramOutboundSessionRoute(params: {
     threadId: canonicalThreadId,
     currentSessionKey: params.currentSessionKey,
     precedence: ["threadId", "currentSession"],
-    canRecoverCurrentThread: ({ route: routeLocal }) =>
-      routeLocal.chatType !== "direct" || (params.cfg.session?.dmScope ?? "main") !== "main",
   });
   const routeThreadId = resolveTelegramNativeTopicThreadId(route.threadId, resolvedThreadId);
   return {
