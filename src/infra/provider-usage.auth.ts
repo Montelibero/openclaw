@@ -32,6 +32,9 @@ export type ProviderAuth = {
   accountId?: string;
   authProfileId?: string;
   hookProvider?: string;
+  // Set for user-configured custom providers (with `baseUrl`) so the snapshot
+  // fetcher can hit `<baseUrl>/v1/limits` directly.
+  baseUrl?: string;
 };
 
 type AuthStore = ReturnType<typeof ensureAuthProfileStore>;
@@ -553,6 +556,28 @@ export async function resolveProviderAuths(params: {
     if (fallbackAuth) {
       auths.push(fallbackAuth);
     }
+  }
+
+  // Pick up user-configured custom providers with `baseUrl`. They are not in
+  // the closed `usageProviders` list, but support `/v1/limits` discovery.
+  const seen = new Set(auths.map((a) => a.provider));
+  for (const provider of params.providers) {
+    seen.add(provider);
+  }
+  const providerEntries = stateBase.cfg.models?.providers ?? {};
+  for (const [provider, pConfig] of Object.entries(providerEntries)) {
+    if (!pConfig?.baseUrl || seen.has(provider)) {
+      continue;
+    }
+    const apiKey = resolveProviderApiKeyFromConfigAndStore({
+      state: { ...stateBase, allowAuthProfileStore: true },
+      providerIds: [provider],
+    });
+    auths.push({
+      provider,
+      token: apiKey ?? "",
+      baseUrl: pConfig.baseUrl,
+    });
   }
 
   return auths;

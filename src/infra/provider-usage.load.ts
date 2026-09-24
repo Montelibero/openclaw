@@ -8,6 +8,7 @@ import {
 import { resolveFetch } from "./fetch.js";
 import { resolveProxyFetchFromEnv } from "./net/proxy-fetch.js";
 import { type ProviderAuth, resolveProviderAuths } from "./provider-usage.auth.js";
+import { fetchCustomUsage } from "./provider-usage.fetch.custom.js";
 import {
   DEFAULT_TIMEOUT_MS,
   ignoredErrors,
@@ -26,8 +27,15 @@ async function fetchProviderUsageSnapshotFallback(params: {
   timeoutMs: number;
   fetchFn: typeof fetch;
 }): Promise<ProviderUsageSnapshot> {
-  void params.timeoutMs;
-  void params.fetchFn;
+  if (params.auth.baseUrl) {
+    return fetchCustomUsage(
+      params.auth.provider,
+      params.auth.baseUrl,
+      params.auth.token,
+      params.timeoutMs,
+      params.fetchFn,
+    );
+  }
   return {
     provider: params.auth.provider,
     displayName: resolveProviderUsageDisplayName(params.auth.provider),
