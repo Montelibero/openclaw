@@ -151,8 +151,10 @@ export function toTelegramRichMessageContextParams(
   if (replyToMessageId !== undefined) {
     richParams.reply_parameters = {
       message_id: replyToMessageId,
-      allow_sending_without_reply: true,
     };
+    if (params?.allow_sending_without_reply === true) {
+      richParams.reply_parameters.allow_sending_without_reply = true;
+    }
   }
   return richParams;
 }

@@ -1183,6 +1183,49 @@ describe("sendMessageTelegram", () => {
     expect(result.receipt?.platformMessageIds).toEqual(["47", "48"]);
   });
 
+  it("keeps required reply-to on every durable fallback chunk", async () => {
+    const text = `Status includes openai:owner@example.com ${"A".repeat(5000)}`;
+    botRawApi.sendRichMessage.mockRejectedValueOnce(createRichEntityInvalidError("EMAIL"));
+    botApi.sendMessage
+      .mockResolvedValueOnce({ message_id: 47, chat: { id: "123" } })
+      .mockResolvedValueOnce({ message_id: 48, chat: { id: "123" } });
+
+    await sendMessageTelegram("123", text, {
+      cfg: { channels: { telegram: { richMessages: true } } },
+      token: "tok",
+      replyToMessageId: 100,
+      replyToIdSource: "implicit",
+      replyToMode: "first",
+      requireReplyToMessageId: true,
+    });
+
+    expect(botApi.sendMessage).toHaveBeenCalledTimes(2);
+    for (const call of botApi.sendMessage.mock.calls) {
+      expect(call[2]).toMatchObject({ reply_to_message_id: 100 });
+      expect(call[2]).not.toHaveProperty("allow_sending_without_reply");
+    }
+  });
+
+  it("keeps required reply-to fail-closed for durable rich sends", async () => {
+    botRawApi.sendRichMessage.mockResolvedValueOnce({ message_id: 46, chat: { id: "123" } });
+
+    await sendMessageTelegram("123", "Final answer", {
+      cfg: { channels: { telegram: { richMessages: true } } },
+      token: "tok",
+      replyToMessageId: 100,
+      replyToIdSource: "implicit",
+      replyToMode: "first",
+      requireReplyToMessageId: true,
+    });
+
+    expect(botRawApi.sendRichMessage).toHaveBeenCalledTimes(1);
+    const params = botRawApi.sendRichMessage.mock.calls[0]?.[0] as
+      | { reply_parameters?: Record<string, unknown> }
+      | undefined;
+    expect(params?.reply_parameters).toMatchObject({ message_id: 100 });
+    expect(params?.reply_parameters).not.toHaveProperty("allow_sending_without_reply");
+  });
+
   it.each([
     {
       name: "list",

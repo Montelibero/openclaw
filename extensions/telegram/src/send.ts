@@ -136,6 +136,8 @@ type TelegramSendOpts = {
   replyToIdSource?: "explicit" | "implicit";
   /** Controls whether replyToMessageId is applied to every internal text chunk. */
   replyToMode?: ReplyToMode;
+  /** Fail before sending when an inbound response cannot attach a Telegram reply target. */
+  requireReplyToMessageId?: boolean;
   /** Quote text for Telegram reply_parameters. */
   quoteText?: string;
   /** Forum topic thread ID (for forum supergroups) */
@@ -734,7 +736,19 @@ export async function sendMessageTelegram(
     messageThreadId: opts.messageThreadId,
     chatType: target.chatType,
   });
+  const requireReplyToMessageId = opts.requireReplyToMessageId === true;
+  if (
+    requireReplyToMessageId &&
+    !(
+      typeof opts.replyToMessageId === "number" &&
+      Number.isInteger(opts.replyToMessageId) &&
+      opts.replyToMessageId > 0
+    )
+  ) {
+    throw new Error("Telegram inbound reply requires a reply target");
+  }
   const singleUseReplyTo =
+    !requireReplyToMessageId &&
     opts.replyToIdSource === "implicit" &&
     opts.replyToMode !== undefined &&
     isSingleUseReplyToMode(opts.replyToMode);
@@ -746,6 +760,7 @@ export async function sendMessageTelegram(
             replyToMessageId: opts.replyToMessageId,
             replyQuoteText: opts.quoteText,
             useReplyIdAsQuoteSource: true,
+            allowSendingWithoutReply: !requireReplyToMessageId,
           }
         : {}),
     });
@@ -837,7 +852,8 @@ export async function sendMessageTelegram(
   ) =>
     // Telegram Desktop can render long formatted reply chunks as unsupported messages.
     // Multi-part `first` replies keep chat/topic routing but avoid hiding chunk text.
-    !replyToAlreadyUsed && (!singleUseReplyTo || (chunkCount === 1 && index === 0));
+    (requireReplyToMessageId || !replyToAlreadyUsed) &&
+    (!singleUseReplyTo || (chunkCount === 1 && index === 0));
 
   const buildTextParams = (
     index: number,

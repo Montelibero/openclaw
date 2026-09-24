@@ -181,6 +181,42 @@ describe("telegramOutbound", () => {
     expect(result).toEqual({ channel: "telegram", messageId: "tg-final", chatId: "12345" });
   });
 
+  it("requires reply targets for implicit inbound sends", async () => {
+    sendMessageTelegramMock.mockResolvedValueOnce({ messageId: "tg-final", chatId: "12345" });
+
+    await telegramOutbound.sendText!({
+      cfg: {} as never,
+      to: "12345",
+      text: "Final answer",
+      replyToId: "900",
+      replyToIdSource: "implicit",
+      deps: { sendTelegram: sendMessageTelegramMock },
+    });
+
+    const options = callOptionsAt(sendMessageTelegramMock, 0, "12345", "Final answer");
+    expect(options.replyToMessageId).toBe(900);
+    expect(options.replyToIdSource).toBe("implicit");
+    expect(options.requireReplyToMessageId).toBe(true);
+  });
+
+  it("requires reply targets for resolved explicit reply sends", async () => {
+    sendMessageTelegramMock.mockResolvedValueOnce({ messageId: "tg-final", chatId: "12345" });
+
+    await telegramOutbound.sendText!({
+      cfg: {} as never,
+      to: "12345",
+      text: "Final answer",
+      replyToId: "900",
+      replyToIdSource: "explicit",
+      deps: { sendTelegram: sendMessageTelegramMock },
+    });
+
+    const options = callOptionsAt(sendMessageTelegramMock, 0, "12345", "Final answer");
+    expect(options.replyToMessageId).toBe(900);
+    expect(options.replyToIdSource).toBe("explicit");
+    expect(options.requireReplyToMessageId).toBe(true);
+  });
+
   it("applies reaction-only payloads without sending empty Telegram text", async () => {
     reactMessageTelegramMock.mockResolvedValueOnce({ ok: true });
 

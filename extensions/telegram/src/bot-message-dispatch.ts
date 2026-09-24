@@ -1548,6 +1548,8 @@ export const dispatchTelegramMessage = async ({
     !replyQuoteTargetsBotMessage && replyQuoteMessageId != null
       ? String(replyQuoteMessageId)
       : undefined;
+  const requiredInboundReplyTargetId =
+    typeof msg.message_id === "number" ? String(msg.message_id) : undefined;
   const currentMessageIdForQuoteReply =
     implicitQuoteReplyTargetId && ctxPayload.MessageSid ? ctxPayload.MessageSid : undefined;
   const replyQuotePosition =
@@ -1645,6 +1647,7 @@ export const dispatchTelegramMessage = async ({
     replyQuotePosition,
     replyQuoteEntities,
     replyQuoteByMessageId,
+    requireReplyToMessageId: requiredInboundReplyTargetId != null,
     transcriptMirror: sessionKey
       ? async (payload: TelegramTranscriptMirrorPayload) => {
           const idempotencyKey = `telegram-final:${sessionKey}:${transcriptMirrorTurnId}:${transcriptMirrorSequence++}`;
@@ -1746,6 +1749,12 @@ export const dispatchTelegramMessage = async ({
       }
       return { ...payload, replyToId: implicitQuoteReplyTargetId };
     };
+    const applyRequiredReplyTarget = (payload: ReplyPayload): ReplyPayload => {
+      if (!requiredInboundReplyTargetId || payload.replyToId != null) {
+        return payload;
+      }
+      return { ...payload, replyToId: requiredInboundReplyTargetId };
+    };
     const normalizeDeliveryPayload = (payload: ReplyPayload): ReplyPayload | undefined => {
       const keepReasoningLane = payload.isReasoning === true && durableReasoningPayloadsEnabled;
       const payloadForPlan = keepReasoningLane ? { ...payload } : payload;
@@ -1774,7 +1783,7 @@ export const dispatchTelegramMessage = async ({
       if (isDispatchSuperseded()) {
         return false;
       }
-      const deliverablePayload = applyQuoteReplyTarget(payload);
+      const deliverablePayload = applyRequiredReplyTarget(applyQuoteReplyTarget(payload));
       const promptContextTimestampMs =
         options?.durable && deliverablePayload.text
           ? await resolvePromptContextTimestampMs(deliverablePayload.text)
@@ -3035,7 +3044,12 @@ export const dispatchTelegramMessage = async ({
       ? "Something went wrong while processing your request. Please try again."
       : EMPTY_RESPONSE_FALLBACK;
     const result = await (telegramDeps.deliverReplies ?? deliverReplies)({
-      replies: [{ text: fallbackText }],
+      replies: [
+        {
+          text: fallbackText,
+          ...(requiredInboundReplyTargetId ? { replyToId: requiredInboundReplyTargetId } : {}),
+        },
+      ],
       ...deliveryBaseOptions,
       silent: silentErrorReplies && (dispatchError != null || hadErrorReplyFailureOrSkip),
       mediaLoader: telegramDeps.loadWebMedia,
@@ -3056,11 +3070,19 @@ export const dispatchTelegramMessage = async ({
         ? (ctxPayload.CommandTargetSessionKey ?? ctxPayload.SessionKey)
         : ctxPayload.SessionKey;
     const silentReplyFallback = projectOutboundPayloadPlanForDelivery(
-      createOutboundPayloadPlan([{ text: "NO_REPLY" }], {
-        cfg,
-        sessionKey: policySessionKey,
-        surface: "telegram",
-      }),
+      createOutboundPayloadPlan(
+        [
+          {
+            text: "NO_REPLY",
+            ...(requiredInboundReplyTargetId ? { replyToId: requiredInboundReplyTargetId } : {}),
+          },
+        ],
+        {
+          cfg,
+          sessionKey: policySessionKey,
+          surface: "telegram",
+        },
+      ),
     );
     if (silentReplyFallback.length > 0) {
       const result = await (telegramDeps.deliverReplies ?? deliverReplies)({

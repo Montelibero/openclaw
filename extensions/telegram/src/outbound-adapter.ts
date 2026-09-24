@@ -83,6 +83,7 @@ async function resolveTelegramSendContext(params: {
     replyToMessageId?: number;
     replyToIdSource?: TelegramSendOpts["replyToIdSource"];
     replyToMode?: TelegramSendOpts["replyToMode"];
+    requireReplyToMessageId?: TelegramSendOpts["requireReplyToMessageId"];
     accountId?: string;
     silent?: boolean;
     gatewayClientScopes?: readonly string[];
@@ -99,6 +100,7 @@ async function resolveTelegramSendContext(params: {
       replyToMessageId: parseTelegramReplyToMessageId(params.replyToId),
       ...(params.replyToIdSource !== undefined ? { replyToIdSource: params.replyToIdSource } : {}),
       ...(params.replyToMode !== undefined ? { replyToMode: params.replyToMode } : {}),
+      ...(params.replyToIdSource !== undefined ? { requireReplyToMessageId: true } : {}),
       accountId: params.accountId ?? undefined,
       silent: params.silent,
       gatewayClientScopes: params.gatewayClientScopes,
@@ -170,6 +172,7 @@ export async function sendTelegramPayloadMessages(params: {
     ...(params.payload.audioAsVoice === true ? { asVoice: true } : {}),
   };
   const shouldConsumeImplicitReplyTarget =
+    payloadOpts.requireReplyToMessageId !== true &&
     payloadOpts.replyToIdSource === "implicit" &&
     payloadOpts.replyToMode !== undefined &&
     isSingleUseReplyToMode(payloadOpts.replyToMode);

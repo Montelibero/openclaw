@@ -11,7 +11,7 @@ const GrammyErrorCtor: typeof GrammyError | undefined =
 
 type TelegramReplyParameters = {
   message_id: number;
-  allow_sending_without_reply: true;
+  allow_sending_without_reply?: true;
   quote?: string;
   quote_position?: number;
   quote_entities?: MessageEntity[];
@@ -50,6 +50,7 @@ export function buildTelegramThreadReplyParams(opts?: {
   replyQuotePosition?: number;
   replyQuoteEntities?: unknown[];
   useReplyIdAsQuoteSource?: boolean;
+  allowSendingWithoutReply?: boolean;
 }): TelegramThreadReplyParams {
   const params: TelegramThreadReplyParams = {};
   const threadParams = buildTelegramThreadParams(opts?.thread);
@@ -70,17 +71,22 @@ export function buildTelegramThreadReplyParams(opts?: {
   const replyQuoteTextRaw =
     replyQuoteMessageId === replyToMessageId ? opts?.replyQuoteText : undefined;
   const replyQuoteText = replyQuoteTextRaw?.trim() ? replyQuoteTextRaw : undefined;
+  const allowSendingWithoutReply = opts?.allowSendingWithoutReply !== false;
   if (!replyQuoteText) {
     params.reply_to_message_id = replyToMessageId;
-    params.allow_sending_without_reply = true;
+    if (allowSendingWithoutReply) {
+      params.allow_sending_without_reply = true;
+    }
     return params;
   }
 
   const replyParameters: TelegramReplyParameters = {
     message_id: replyToMessageId,
     quote: replyQuoteText,
-    allow_sending_without_reply: true,
   };
+  if (allowSendingWithoutReply) {
+    replyParameters.allow_sending_without_reply = true;
+  }
   if (typeof opts?.replyQuotePosition === "number" && Number.isFinite(opts.replyQuotePosition)) {
     replyParameters.quote_position = Math.trunc(opts.replyQuotePosition);
   }
@@ -100,6 +106,7 @@ export function buildTelegramSendParams(opts?: {
   thread?: TelegramThreadSpec | null;
   silent?: boolean;
   useReplyIdAsQuoteSource?: boolean;
+  allowSendingWithoutReply?: boolean;
 }): Record<string, unknown> {
   const params: Record<string, unknown> = { ...buildTelegramThreadReplyParams(opts) };
   if (opts?.silent === true) {
@@ -133,10 +140,20 @@ export function removeTelegramNativeQuoteParam(
     return {};
   }
   const replyMessageId = getTelegramNativeQuoteReplyMessageId(params);
+  const replyParameters = params.reply_parameters;
+  const allowSendingWithoutReply =
+    replyParameters &&
+    typeof replyParameters === "object" &&
+    (replyParameters as { allow_sending_without_reply?: unknown }).allow_sending_without_reply ===
+      true;
   const { reply_parameters: _ignored, ...rest } = params;
   if (replyMessageId != null) {
     rest.reply_to_message_id = replyMessageId;
-    rest.allow_sending_without_reply = true;
+    if (allowSendingWithoutReply) {
+      rest.allow_sending_without_reply = true;
+    } else {
+      delete rest.allow_sending_without_reply;
+    }
   }
   return rest;
 }

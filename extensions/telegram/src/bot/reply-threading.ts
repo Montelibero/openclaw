@@ -38,6 +38,7 @@ export async function sendChunkedTelegramReplyText<
   replyToMode: ReplyToMode;
   replyMarkup?: TReplyMarkup;
   replyQuoteText?: string;
+  requireReplyToMessageId?: boolean;
   quoteOnlyOnFirstChunk?: boolean;
   markDelivered?: (progress: TProgress) => void;
   sendChunk: (opts: {
@@ -49,8 +50,13 @@ export async function sendChunkedTelegramReplyText<
   }) => Promise<void>;
 }): Promise<void> {
   const applyDelivered = params.markDelivered ?? markDelivered;
+  if (params.requireReplyToMessageId === true && params.chunks.length > 0 && !params.replyToId) {
+    throw new Error("Telegram inbound reply requires a reply target");
+  }
   const suppressSingleUseReply =
-    params.chunks.length > 1 && isSingleUseReplyToMode(params.replyToMode);
+    params.requireReplyToMessageId !== true &&
+    params.chunks.length > 1 &&
+    isSingleUseReplyToMode(params.replyToMode);
   for (let i = 0; i < params.chunks.length; i += 1) {
     const chunk = params.chunks[i];
     if (!chunk) {
@@ -60,13 +66,16 @@ export async function sendChunkedTelegramReplyText<
     // Telegram Desktop can render long formatted native-reply chunks as
     // unsupported messages. Multi-part `first` replies consume the reply target
     // without adding native reply params, preserving visible text.
-    const replyToMessageId = suppressSingleUseReply
-      ? undefined
-      : resolveReplyToForSend({
-          replyToId: params.replyToId,
-          replyToMode: params.replyToMode,
-          progress: params.progress,
-        });
+    const replyToMessageId =
+      params.requireReplyToMessageId === true
+        ? params.replyToId
+        : suppressSingleUseReply
+          ? undefined
+          : resolveReplyToForSend({
+              replyToId: params.replyToId,
+              replyToMode: params.replyToMode,
+              progress: params.progress,
+            });
     const shouldAttachQuote =
       Boolean(replyToMessageId) &&
       Boolean(params.replyQuoteText) &&
