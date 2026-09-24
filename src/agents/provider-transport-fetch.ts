@@ -147,6 +147,101 @@ function capNonOkResponseBodyLazily(response: Response, maxBytes: number): Respo
   return new Response(capped, response);
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function normalizeChatCompletionContent(content: unknown): string {
+  if (typeof content === "string") {
+    return content;
+  }
+  if (!Array.isArray(content)) {
+    return "";
+  }
+  return content
+    .map((part) => {
+      if (typeof part === "string") {
+        return part;
+      }
+      if (!isRecord(part)) {
+        return "";
+      }
+      const text = part.text;
+      return typeof text === "string" ? text : "";
+    })
+    .join("");
+}
+
+function buildOpenAIChatCompletionChunkEvents(value: unknown): unknown[] | undefined {
+  if (!isRecord(value) || value.object !== "chat.completion" || !Array.isArray(value.choices)) {
+    return undefined;
+  }
+  const id = typeof value.id === "string" ? value.id : undefined;
+  const created = typeof value.created === "number" ? value.created : undefined;
+  const model = typeof value.model === "string" ? value.model : undefined;
+  const events: unknown[] = [];
+  for (const rawChoice of value.choices) {
+    if (!isRecord(rawChoice)) {
+      continue;
+    }
+    const index = typeof rawChoice.index === "number" ? rawChoice.index : 0;
+    const message = isRecord(rawChoice.message) ? rawChoice.message : {};
+    const content = normalizeChatCompletionContent(message.content);
+    if (content.length > 0) {
+      const reasoningContent =
+        typeof message.reasoning_content === "string" && message.reasoning_content.length > 0
+          ? message.reasoning_content
+          : undefined;
+      events.push({
+        id,
+        object: "chat.completion.chunk",
+        created,
+        model,
+        choices: [
+          {
+            index,
+            delta: {
+              role: message.role === "assistant" ? "assistant" : undefined,
+              content,
+              ...(reasoningContent ? { reasoning_content: reasoningContent } : {}),
+            },
+            finish_reason: null,
+          },
+        ],
+      });
+    }
+    events.push({
+      id,
+      object: "chat.completion.chunk",
+      created,
+      model,
+      choices: [
+        {
+          index,
+          delta: {},
+          finish_reason:
+            typeof rawChoice.finish_reason === "string" ? rawChoice.finish_reason : "stop",
+        },
+      ],
+      ...(isRecord(value.usage) ? { usage: value.usage } : {}),
+    });
+  }
+  return events.length > 0 ? events : undefined;
+}
+
+function synthesizeJsonAsOpenAISdkSse(data: string): string {
+  try {
+    const parsed = JSON.parse(data) as unknown;
+    const events = buildOpenAIChatCompletionChunkEvents(parsed);
+    if (events) {
+      return `${events.map((event) => `data: ${JSON.stringify(event)}\n\n`).join("")}data: [DONE]\n\n`;
+    }
+  } catch {
+    // Fall through to the generic SDK-visible JSON wrapper below.
+  }
+  return `data: ${data}\n\ndata: [DONE]\n\n`;
+}
+
 function sanitizeOpenAISdkSseResponse(
   response: Response,
   options?: { synthesizeJsonAsSse?: boolean },
@@ -180,9 +275,10 @@ function sanitizeOpenAISdkSseResponse(
               buffer += decoder.decode();
               const data = buffer.trim();
               if (data) {
-                controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+                controller.enqueue(encoder.encode(synthesizeJsonAsOpenAISdkSse(data)));
+              } else {
+                controller.enqueue(encoder.encode("data: [DONE]\n\n"));
               }
-              controller.enqueue(encoder.encode("data: [DONE]\n\n"));
               controller.close();
               return;
             }

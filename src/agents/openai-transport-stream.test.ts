@@ -1827,7 +1827,7 @@ describe("openai transport stream", () => {
           JSON.stringify({
             id: "chatcmpl-json-fallback",
             object: "chat.completion",
-            model: "moonshotai/kimi-k2.6",
+            model: "gpt-5.4",
             choices: [
               {
                 index: 0,
@@ -1854,8 +1854,8 @@ describe("openai transport stream", () => {
         throw new Error("Missing loopback server address");
       }
       const model = {
-        id: "moonshotai/kimi-k2.6",
-        name: "Kimi K2.6",
+        id: "default_combo",
+        name: "Default combo",
         api: "openai-completions",
         provider: "openrouter",
         baseUrl: `http://127.0.0.1:${address.port}/v1`,
@@ -1879,12 +1879,14 @@ describe("openai transport stream", () => {
       );
 
       let doneReason: string | undefined;
+      let responseModel: string | undefined;
       let thinking = "";
       let text = "";
       for await (const event of stream as AsyncIterable<{
         type: string;
         delta?: string;
         reason?: string;
+        message?: { responseModel?: string };
       }>) {
         if (event.type === "thinking_delta") {
           thinking += event.delta ?? "";
@@ -1894,6 +1896,7 @@ describe("openai transport stream", () => {
         }
         if (event.type === "done") {
           doneReason = event.reason;
+          responseModel = event.message?.responseModel;
         }
       }
 
@@ -1901,6 +1904,7 @@ describe("openai transport stream", () => {
       expect(thinking).toBe("Need a direct answer.");
       expect(text).toBe("live-ok");
       expect(doneReason).toBe("stop");
+      expect(responseModel).toBe("gpt-5.4");
     } finally {
       await new Promise<void>((resolve, reject) => {
         server.close((error) => (error ? reject(error) : resolve()));

@@ -1375,6 +1375,91 @@ describe("buildGuardedModelFetch", () => {
     ]);
   });
 
+  it("converts non-streaming chat completion JSON into OpenAI-compatible stream chunks", async () => {
+    fetchWithSsrFGuardMock.mockResolvedValue({
+      response: new Response(
+        JSON.stringify({
+          id: "resp_1",
+          object: "chat.completion",
+          created: 1780011931,
+          model: "gpt-5.4",
+          choices: [
+            {
+              index: 0,
+              message: { role: "assistant", content: "Привет! Чем помочь?" },
+              finish_reason: "stop",
+            },
+          ],
+          usage: {
+            prompt_tokens: 2009,
+            completion_tokens: 10,
+            total_tokens: 2019,
+            prompt_tokens_details: { cached_tokens: 0 },
+            completion_tokens_details: { reasoning_tokens: 0 },
+          },
+        }),
+        { headers: { "content-type": "application/json; charset=utf-8" } },
+      ),
+      finalUrl: "https://api.example.test/v1/chat/completions",
+      release: vi.fn(async () => undefined),
+    });
+    const model = {
+      id: "default_combo",
+      provider: "custom",
+      api: "openai-completions",
+      baseUrl: "https://api.example.test/v1",
+    } as unknown as Model<"openai-completions">;
+
+    const response = await buildGuardedModelFetch(model)(
+      "https://api.example.test/v1/chat/completions",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ model: "default_combo", stream: true }),
+      },
+    );
+    const items = [];
+    for await (const item of Stream.fromSSEResponse(response, new AbortController())) {
+      items.push(item);
+    }
+
+    expect(items).toEqual([
+      {
+        id: "resp_1",
+        object: "chat.completion.chunk",
+        created: 1780011931,
+        model: "gpt-5.4",
+        choices: [
+          {
+            index: 0,
+            delta: { role: "assistant", content: "Привет! Чем помочь?" },
+            finish_reason: null,
+          },
+        ],
+      },
+      {
+        id: "resp_1",
+        object: "chat.completion.chunk",
+        created: 1780011931,
+        model: "gpt-5.4",
+        choices: [
+          {
+            index: 0,
+            delta: {},
+            finish_reason: "stop",
+          },
+        ],
+        usage: {
+          prompt_tokens: 2009,
+          completion_tokens: 10,
+          total_tokens: 2019,
+          prompt_tokens_details: { cached_tokens: 0 },
+          completion_tokens_details: { reasoning_tokens: 0 },
+        },
+      },
+    ]);
+  });
+
   it("does not clone Request bodies while checking for streaming JSON fallbacks", async () => {
     const cloneSpy = vi.spyOn(Request.prototype, "clone");
     fetchWithSsrFGuardMock.mockResolvedValue({
