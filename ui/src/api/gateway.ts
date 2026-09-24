@@ -179,6 +179,7 @@ export type GatewayControlUiPluginTab = {
   description?: string;
   icon?: string;
   path?: string;
+  gatewaySession?: boolean;
   group?: "control" | "agent";
   order?: number;
 };

@@ -202,6 +202,7 @@ const explicitNeverBundleDependencies = [
   "@matrix-org/matrix-sdk-crypto-nodejs",
   "@openclaw/ai",
   "@vitest/expect",
+  "cloudcmd",
   "jimp",
   "matrix-js-sdk",
   "prism-media",

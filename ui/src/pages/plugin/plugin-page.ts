@@ -4,6 +4,7 @@ import { property, state } from "lit/decorators.js";
 import type { GatewayBrowserClient, GatewayControlUiPluginTab } from "../../api/gateway.ts";
 import type { RouteId } from "../../app-route-paths.ts";
 import { applicationContext, type ApplicationContext } from "../../app/context.ts";
+import "../../components/gateway-plugin-frame.ts";
 import { t } from "../../i18n/index.ts";
 import { resolveEmbedSandbox } from "../../lib/chat/tool-display.ts";
 import { pluginTabKey } from "./route.ts";
@@ -105,11 +106,11 @@ export class PluginPage extends LitElement {
     // Only advertised tabs render: hello omits descriptors whose plugin is
     // inactive or whose required scopes the connection lacks.
     const info = this.tabInfo();
+    const snapshot = context.gateway.snapshot;
     if (info && this.tabKey() in BUNDLED_TAB_VIEWS) {
       if (!this.bundledView) {
         return nothing;
       }
-      const snapshot = context.gateway.snapshot;
       return this.bundledView.render({
         host: this,
         client: snapshot.client,
@@ -117,16 +118,29 @@ export class PluginPage extends LitElement {
         onRequestUpdate: () => this.requestUpdate(),
       });
     }
-    if (info?.path) {
+    if (info?.path && !info.gatewaySession) {
       return html`
         <section class="plugin-tab-embed">
           <iframe
             class="plugin-tab-embed__frame"
             src=${info.path}
             title=${info.label}
-            sandbox=${resolveEmbedSandbox(context.config.current.embedSandboxMode)}
+            .sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
           ></iframe>
         </section>
+      `;
+    }
+    if (info?.path) {
+      return html`
+        <openclaw-gateway-plugin-frame
+          .client=${snapshot.client}
+          .pluginId=${this.pluginId}
+          .tabId=${info.id}
+          .path=${info.path}
+          .label=${info.label}
+          .connected=${snapshot.connected}
+          .sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        ></openclaw-gateway-plugin-frame>
       `;
     }
     return html`
