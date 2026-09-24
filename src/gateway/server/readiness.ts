@@ -24,21 +24,38 @@ export type ReadinessChecker = () => ReadinessResult;
 
 const DEFAULT_READINESS_CACHE_TTL_MS = 1_000;
 
+function isTelegramPollingLike(
+  channelId: string,
+  accountSnapshot: ChannelAccountSnapshot,
+): boolean {
+  const webhookUrl =
+    typeof accountSnapshot.webhookUrl === "string" ? accountSnapshot.webhookUrl.trim() : "";
+  return channelId === "telegram" && accountSnapshot.mode !== "webhook" && webhookUrl.length === 0;
+}
+
 function shouldIgnoreReadinessFailure(
+  channelId: string,
   accountSnapshot: ChannelAccountSnapshot,
   health: ChannelHealthEvaluation,
   autostartSuppressed: boolean,
 ): boolean {
-  if (health.reason === "unmanaged" || health.reason === "stale-socket") {
+  const isTelegram = channelId === "telegram";
+  const isTelegramPolling = isTelegramPollingLike(channelId, accountSnapshot);
+  if (health.reason === "unmanaged") {
     return true;
   }
+  if (health.reason === "stale-socket") {
+    // Telegram polling publishes a getUpdates heartbeat; stale transport means
+    // inbound Telegram delivery is down, even if the gateway process is alive.
+    return !isTelegramPolling;
+  }
   if (autostartSuppressed && health.reason === "not-running") {
-    return true;
+    return !isTelegram;
   }
   // Channel restarts spend time in backoff with running=false before the next
   // lifecycle re-enters startup grace. Keep readiness green during that handoff
   // window, but still surface hard failures once restart attempts are exhausted.
-  return health.reason === "not-running" && accountSnapshot.restartPending === true;
+  return health.reason === "not-running" && accountSnapshot.restartPending === true && !isTelegram;
 }
 
 /** Create a cached readiness checker over channel runtime health. */
@@ -100,16 +117,24 @@ export function createReadinessChecker(deps: {
           channelId,
         };
         const health = evaluateChannelHealth(accountSnapshot, policy);
-        if (!health.healthy && autostartSuppressed && health.reason === "not-running") {
+        const ignoredFailure = shouldIgnoreReadinessFailure(
+          channelId,
+          accountSnapshot,
+          health,
+          autostartSuppressed,
+        );
+        if (
+          !health.healthy &&
+          ignoredFailure &&
+          autostartSuppressed &&
+          health.reason === "not-running"
+        ) {
           if (!suppressed.includes(channelId)) {
             suppressed.push(channelId);
           }
           continue;
         }
-        if (
-          !health.healthy &&
-          !shouldIgnoreReadinessFailure(accountSnapshot, health, autostartSuppressed)
-        ) {
+        if (!health.healthy && !ignoredFailure) {
           failing.push(channelId);
           break;
         }

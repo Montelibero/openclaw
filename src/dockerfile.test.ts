@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 
 const repoRoot = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const dockerfilePath = join(repoRoot, "Dockerfile");
+const dockerComposePath = join(repoRoot, "docker-compose.yml");
 const dockerReleaseWorkflowPath = join(repoRoot, ".github/workflows/docker-release.yml");
 const fullReleaseValidationWorkflowPath = join(
   repoRoot,
@@ -79,6 +80,18 @@ describe("Dockerfile", () => {
       "ca-certificates curl git hostname lsof openssl procps python3 tini",
     );
     expect(dockerfile).toContain('ENTRYPOINT ["tini", "-s", "--"]');
+  });
+
+  it("uses readiness for the production container healthcheck", async () => {
+    const [dockerfile, compose] = await Promise.all([
+      readFile(dockerfilePath, "utf8"),
+      readFile(dockerComposePath, "utf8"),
+    ]);
+
+    expect(dockerfile).toContain("http://127.0.0.1:18789/readyz");
+    expect(dockerfile).not.toContain("http://127.0.0.1:18789/healthz");
+    expect(compose).toContain("http://127.0.0.1:18789/readyz");
+    expect(compose).not.toContain("http://127.0.0.1:18789/healthz");
   });
 
   it("installs optional browser dependencies after pnpm install", async () => {

@@ -109,7 +109,7 @@ docker compose logs -f openclaw-gateway
 curl -fsS http://127.0.0.1:18789/healthz
 ```
 
-`/healthz` returning a 200 response confirms the gateway process is listening and healthy; the built-in image `HEALTHCHECK` polls the same endpoint.
+`/healthz` returning a 200 response confirms the gateway process is listening. The built-in image `HEALTHCHECK` polls `/readyz` so channel readiness failures can mark the container unhealthy.
 
 ## What persists where
 
