@@ -120,7 +120,7 @@ describe("Dockerfile", () => {
     expect(storeSeedIndex).toBeGreaterThan(installIndex);
     expect(storeSeedIndex).toBeLessThan(pruneIndex);
     expect(pruneIndex).toBeGreaterThan(-1);
-    expect(dockerfile).toContain("--config.offline=true");
+    expect(dockerfile).not.toContain("--config.offline=true");
     expect(dockerfile.split("--config.supportedArchitectures.os=linux").length - 1).toBe(2);
     expect(
       dockerfile.split("--config.supportedArchitectures.cpu=\"$(node -p 'process.arch')\"").length -
@@ -277,7 +277,7 @@ describe("Dockerfile", () => {
         'OPENCLAW_EXTENSIONS="$OPENCLAW_EXTENSIONS" OPENCLAW_BUNDLED_PLUGIN_DIR="$OPENCLAW_BUNDLED_PLUGIN_DIR" node scripts/prune-docker-plugin-dist.mjs',
       ),
     );
-    expect(dockerfile).toContain("--config.offline=true");
+    expect(dockerfile).not.toContain("--config.offline=true");
     expect(dockerfile).toContain("--config.supportedArchitectures.os=linux");
     expect(dockerfile).toContain(
       "--config.supportedArchitectures.cpu=\"$(node -p 'process.arch')\"",
