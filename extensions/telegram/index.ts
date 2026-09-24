@@ -1,5 +1,6 @@
 // Telegram plugin entrypoint registers its OpenClaw integration.
 import { defineBundledChannelEntry } from "openclaw/plugin-sdk/channel-entry-contract";
+import { createTelegramRawTool } from "./src/raw-tool.js";
 
 export default defineBundledChannelEntry({
   id: "telegram",
@@ -21,5 +22,8 @@ export default defineBundledChannelEntry({
   accountInspect: {
     specifier: "./account-inspect-api.js",
     exportName: "inspectTelegramReadOnlyAccount",
+  },
+  registerFull(api) {
+    api.registerTool(createTelegramRawTool(api));
   },
 });
